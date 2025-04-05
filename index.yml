@@ -42,7 +42,7 @@
           description: |
             ブルボン 濃厚チョコブラウニー CMソング
             🎤[DAM] [5512-83](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=5512-83) [JOYSOUND][630673](https://www.joysound.com/web/search/song/1059552)
-            [YouTube](//youtu.be/-zmfWs7Ck)
+            [YouTube](//youtu.be/-zmfWs7CAIk)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a066254/l061e70.html)
         - title: "アタシのドレス"
           author: "ねぐせ。"
@@ -61,7 +61,7 @@
           description: |
             映画 SAND LAND 主題歌
             🎤[DAM] [1317-96](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=1317-96) [JOYSOUND][618349](https://www.joysound.com/web/search/song/976666)
-            [YouTube](//youtu.be/ePulYwgc)
+            [YouTube](//youtu.be/ePuwo3lYwgc)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a063583/l05d485.html)
         - title: "ハピネス"
           author: "AI"
@@ -252,7 +252,7 @@
           description: |
             ブルボン「アルフォート×YOASOBI Special Movie inspired by ブルーピリオド」CMソング
             🎤[DAM] [5285-69](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=5285-69) [JOYSOUND][486218](https://www.joysound.com/web/search/song/486218)
-            [YouTube](//youtu.be/nEEZwckuU)
+            [YouTube](//youtu.be/Y4nEEZwckuU)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a061652/l051a48.html)
     - name: "'20 Summer Camp"
       background: "../../res/img/backgrounds/camp_2020_summer.webp"
@@ -327,7 +327,7 @@
           author: "蒼山幸子"
           description: |
             🎤[DAM]404 NotFound [JOYSOUND]404 NotFound
-            [YouTube](//youtu.be/2TDx_XN)
+            [YouTube](//youtu.be/2TDx_XNQ5QU)
             [歌詞(Lyrical Nonsense)](https://www.lyrical-nonsense.com/lyrics/sachiko-aoyama/vanilla/)
 - year: "2019"
   camps:
@@ -440,7 +440,7 @@
             フジテレビ火曜ドラマ 2018/4Q 僕らは奇跡でできているEDSong
             🎤[DAM] [5153-16](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=5153-16) [JOYSOUND][433195](https://www.joysound.com/web/search/song/713175)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a050f66/l049c98.html)
-            [YouTube](//youtu.be/XwyXPt70)
+            [YouTube](//youtu.be/XnYwwyXPt70)
     - name: "'18 Global IT Camp"
       background: "../../res/img/backgrounds/global_camp_2018_nus.webp"
       theme: "Think globally, Change the world!"
@@ -502,7 +502,7 @@
           description: |
             🎤[DAM] [4630-01](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=4630-01) [JOYSOUND][28584](https://www.joysound.com/web/search/song/26476)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a0006b5/l001e01.html)
-            [YouTube](//youtu.be/pnBnw)
+            [YouTube](//youtu.be/pnBnu5v8KTw)
 - year: "2017"
   camps:
     - name: "'17 Xmas Camp"
