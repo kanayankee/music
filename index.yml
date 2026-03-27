@@ -32,6 +32,24 @@
 #         [YouTube](//youtu.be/3j77uK8hu5A)
 #         [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a04cc66/l03a371.html)
 #       # リンクなど。 "|" はYAMLの複数行記法です。
+- year: "2026"
+  camps:
+    - name: "'26 Spring Camp"
+      background: "../../res/img/backgrounds/camp_2026_spring.webp"
+      songs:
+        - title: "偉星人"
+          author: "Vaundy"
+          description: |
+            NHK大河ドラマ『青天を衝け』インスパイアードソング
+            🎤[DAM] [1279-96](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=1279-96) [JOYSOUND][642661](https://www.joysound.com/web/search/song/901166)
+            [YouTube](//youtu.be/aDaWuvpB_Kw)
+            [歌詞(歌ネット)](https://www.uta-net.com/song/382470/)
+        - title: "赤春花 (feat.幾田りら)"
+          author: "Sumika"
+          description: |
+            🎤[DAM]404 NotFound [JOYSOUND]404 NotFound
+            [YouTube](//youtu.be/PZ3CB2vmGYo)
+            [歌詞(歌ネット)](https://www.uta-net.com/song/388543/)
 - year: "2025"
   camps:
     - name: "'25 Xmas Camp"
@@ -1063,6 +1081,22 @@
             [YouTube](//youtu.be/RbpDRk_OAPU)
 - year: "番外編"
   camps:
+    - name: "関西卒業サプライズ2026"
+      background: "../../res/img/backgrounds/event_2026_surprise_kansai.webp"
+      theme: "どこかで逢いましょう"
+      songs:
+        - title: "じゃなくて"
+          author: "帝国喫茶"
+          description: |
+            🎤[DAM] [5292-86](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=5392-86) [JOYSOUND]404 NotFound
+            [歌詞(歌ネット)](https://www.uta-net.com/song/323034/)
+            [YouTube](//youtu.be/9UHSIKEvp1A)
+        - title: "ハッピーなんて"
+          author: "サバシスター"
+          description: |
+            🎤[DAM][5569-04](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=5569-04) [JOYSOUND][633908](https://www.joysound.com/web/search/song/1081391)
+            [歌詞(歌ネット)](https://www.uta-net.com/song/366095/)
+            [YouTube](//youtu.be/MV2ki0QdSp0)
     - name: "関東卒業サプライズ2025"
       background: "../../res/img/backgrounds/event_2025_surprise_kanto.webp"
       theme: "青春の1ページの続きを"
