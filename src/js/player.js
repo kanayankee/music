@@ -251,7 +251,6 @@ window.onYouTubeIframeAPIReady = () => {
     if (players.length <= 1) return;
 
     const startIndex = playing !== undefined ? playing : 0;
-    let nextIndex = (startIndex + 1) % players.length;
     let attempts = 0;
 
     const tryPlay = () => {
@@ -260,6 +259,7 @@ window.onYouTubeIframeAPIReady = () => {
         return;
       }
 
+      const nextIndex = (startIndex + 1 + attempts) % players.length;
       attempts++;
       play(nextIndex);
     };
