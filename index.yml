@@ -429,6 +429,7 @@
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a05e5c8/l04828c.html)
             [YouTube](//youtu.be/P7ds78eOLjU)
     - name: "'19 English×IT Camp"
+      isBefore2024: true
       theme: "THINK GLOBALLY,CHANGE THE WORLD"
       songs:
         - title: "BrandNew"
@@ -977,6 +978,7 @@
             [YouTube](//youtu.be/HlDo8qEPbNg)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a04e594/l02ca67.html)
     - name: "'14 English × IT Camp "
+      isBefore2024: true
       songs:
         - title: "Happy"
           author: "Pharrell Williams"
@@ -986,6 +988,7 @@
             [YouTube](//youtu.be/y6Sxv-sUYtM)
             [歌詞(AZLyrics)](https://www.azlyrics.com/lyrics/pharrellwilliams/happy.html)
     - name: "'14 Spring Camp"
+      isBefore2024: true
       theme: "出会い、別れ、はじまり"
       songs:
         - title: "スターラブレイション"
@@ -1005,6 +1008,7 @@
 - year: "2013"
   camps:
     - name: "'13 Xmas Camp"
+      isBefore2024: true
       songs:
         - title: "恋するフォーチュンクッキー"
           author: "AKB48"
@@ -1021,6 +1025,7 @@
             [YouTube](//youtu.be/uKgmu8g-kXE)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a001bf4/l027392.html)
     - name: "'13 Summer Camp"
+      isBefore2024: true
       theme: "きっと忘れられない夏になる。"
       songs:
         - title: "RPG"
@@ -1031,6 +1036,7 @@
             [YouTube](//youtu.be/Mi9uNu35Gmk)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a055790/l02cbdb.html)
     - name: "'13 Spring Camp"
+      isBefore2024: true
       songs:
         - title: "Boom!"
           author: "Maia Hirasawa"
@@ -1056,6 +1062,7 @@
 - year: "2012"
   camps:
     - name: "'12 Xmas Camp"
+      isBefore2024: true
       songs:
         - title: "ハピネス"
           author: "AI"
@@ -1065,6 +1072,7 @@
             [YouTube](//youtu.be/uKgmu8g-kXE)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a001bf4/l027392.html)
     - name: "'12 Summer Camp"
+      isBefore2024: true
       songs:
         - title: "君の知らない物語"
           author: "supercell"
@@ -1209,6 +1217,7 @@
             [YouTube](//youtu.be/5zZSfXiyTvA)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a05bd82/l045db0.html)
     - name: "メンター/コース紹介"
+      isBefore2024: true
       songs:
         - title: "Wings"
           author: "Little Mix"
@@ -1217,6 +1226,7 @@
             [YouTube](//youtu.be/cOQDsmEqVt8)
             [歌詞(AZLyrics)](https://www.azlyrics.com/lyrics/littlemix/wings.html)
     - name: "スクール夏期講習(2016)"
+      isBefore2024: true
       songs:
         - title: "PERFECT BLUE"
           author: "Base Ball Bear"
@@ -1258,6 +1268,7 @@
             [YouTube](//youtu.be/3W1JzN1rkWU)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a05d9ce/l043dca.html)
     - name: "School(Springseason 2019)"
+      isBefore2024: true
       songs:
         - title: "10時の方角"
           author: "sumika"

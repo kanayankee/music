@@ -383,9 +383,6 @@ main {
     section:nth-child(#{$length}n + #{$key}) > .youtube > .play:after {
       border-left-color: $color;
     }
-    .parallax.noimage:nth-child(#{$length}n + #{$key}) {
-      background-color: lighten($color, 20%);
-    }
   }
 
   h2 {
@@ -423,9 +420,6 @@ main {
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
-    &.noimage {
-      background-size: contain;
-    }
     display: flex;
     flex-direction: column;
   }
