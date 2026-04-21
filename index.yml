@@ -1080,15 +1080,16 @@
             [YouTube](//youtu.be/RbpDRk_OAPU)
 - year: "番外編"
   camps:
-    - name: "関西卒業サプライズ2026"
+    - name: "関東卒業サプライズ2026"
+      theme: "春を超えてゆけ僕らの青"
       background: "../../res/img/backgrounds/event_2026_surprise_kanto.webp"
       songs:
         - title: "光を探している"
           author: "postman"
           description: |
             🎤[DAM] [7394-31](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=7394-31) [JOYSOUND] [891699](https://www.joysound.com/web/search/song/785669)
-            [歌詞(歌ネット)](https://www.uta-net.com/song/323034/)
-            [YouTube](//youtu.be/9UHSIKEvp1A)
+            [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a05e32c/l045c69.html)
+            [YouTube](//youtu.be/9bvPTYquU0M)
         - title: "OURBLUE"
           author: "漣音"
           description: |
