@@ -96,7 +96,7 @@ yarn test
 - れん [@ren-suke](//github.com/ren-suke)
 - flying-tobisuke [@flying-tobisuke](//github.com/flying-tobisuke)
 - かなやん [@kanayankee](//github.com/kanayankee)
-- かずさ [@KazusaLiT](//x.com/KazusaLiT)
+- かずさ [@KazusaLiT](//x.com/KazusaLiT)（X）
 
 ## 最後に
 
