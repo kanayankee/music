@@ -68,6 +68,7 @@ yarn test
 
 - English×ITCamp 2014 ご参加のみなさま
 - てっくな予感ぷろじぇくと(とき・あおい・HasuLi・もやし・おとのん・なと・とっぽ・わくわくさん・ゆかり・のぞみ)
+- かずさ [@KazusaLiT](//x.com/KazusaLiT)（X）
 
 ## 曲情報提供者様
 
@@ -92,6 +93,7 @@ yarn test
 - あやめ [@ayame-r](//github.com/ayame-r)
 - simasimasimasima [@simasimasimasima](//github.com/simasimasimasima)
 - なつき [@Natsuki0117](//github.com/Natsuki0117)
+- いちげん [@fukuikazuharu](//x.com/fukuikazuharu)
 
 ## Contributors
 
@@ -101,6 +103,7 @@ yarn test
 - れん [@ren-suke](//github.com/ren-suke)
 - flying-tobisuke [@flying-tobisuke](//github.com/flying-tobisuke)
 - かなやん [@kanayankee](//github.com/kanayankee)
+- かずさ [@KazusaLiT](//x.com/KazusaLiT)（X）
 
 ## 最後に
 

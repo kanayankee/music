@@ -687,7 +687,7 @@
           description: |
             au 冬期CMソング
             🎤[DAM] [1104-48](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=1104-48) [JOYSOUND][693346](https://www.joysound.com/web/search/song/610926)
-            [YouTube](//youtu.be/eIja9BI_h9U)
+            [YouTube](//youtu.be/T383N0Qsk7g)
             [歌詞(プチリリ)](https://petitlyrics.com/lyrics/2554503)
         - title: "キャリア・ウーマン"
           author: "ブルゾンちえみ"
@@ -1054,10 +1054,9 @@
         - title: "さよならメモリーズ"
           author: "supercell"
           description: |
-            動画を見つけたら教えて下さい。
             🎤[DAM] [5667-78](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=5667-78) [JOYSOUND][139943](https://www.joysound.com/web/search/song/147099)
+            [YouTube](//youtu.be/fhkYsNfbIPE)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a051979/l01e2e0.html)
-            [レコチョク](//recochoku.jp/song/S20294713/)
 - year: "2012"
   camps:
     - name: "'12 Xmas Camp"
@@ -1086,6 +1085,20 @@
             [YouTube](//youtu.be/RbpDRk_OAPU)
 - year: "番外編"
   camps:
+    - name: "関東卒業サプライズ2026"
+      theme: "春を超えてゆけ僕らの青"
+      background: "../../res/img/backgrounds/event_2026_surprise_kanto.webp"
+      songs:
+        - title: "光を探している"
+          author: "postman"
+          description: |
+            🎤[DAM] [7394-31](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=7394-31) [JOYSOUND][891699](https://www.joysound.com/web/search/song/785669)
+            [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a05e32c/l045c69.html)
+            [YouTube](//youtu.be/9bvPTYquU0M)
+        - title: "OURBLUE"
+          author: "漣音"
+          description: |
+            運営メンバーのオリジナル曲
     - name: "関西卒業サプライズ2026"
       background: "../../res/img/backgrounds/event_2026_surprise_kansai.webp"
       theme: "どこかで逢いましょう"
