@@ -1172,6 +1172,15 @@
             🎤[DAM] [5423-40](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=5423-40) [JOYSOUND] [812225](https://www.joysound.com/web/search/song/919640)
             [YouTube](//youtu.be/IOBny9KrdMg)
             [歌詞(J-Lyric.net)](https://j-lyric.net/artist/a063048/l058ac7.html)
+    - name: "Futurealise with Tech !"
+      isBefore2024: true
+      songs:
+        - title: "Letters to me"
+          author: "天月 -あまつき-"
+          description: |
+            🎤[DAM] [6836-77](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=6836-77) [JOYSOUND][486062](https://www.joysound.com/web/search/song/848751)
+            [歌詞(KKBOX)](https://www.kkbox.com/jp/ja/song/5ZaL6ATBsZjzv_A3gc)
+            [YouTube](//youtu.be/3iPU-wuB-CE)
     - name: "関東卒業サプライズ2021 〜つながり〜"
       background: "../../res/img/backgrounds/event_2021_surprise_kanto.webp"
       songs:
