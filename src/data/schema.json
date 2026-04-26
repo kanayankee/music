@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Lit! Music Data Schema v2",
+  "type": "object",
+  "properties": {
+    "camp": { "$ref": "#/definitions/yearRecord" },
+    "school": { "$ref": "#/definitions/yearRecord" },
+    "event": { "$ref": "#/definitions/yearRecord" }
+  },
+  "required": ["camp", "school", "event"],
+  "definitions": {
+    "yearRecord": {
+      "type": "object",
+      "patternProperties": {
+        "^[0-9]{4}$": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "songs"],
+            "properties": {
+              "name": { "type": "string" },
+              "background": { "type": "string" },
+              "theme": { "type": "string" },
+              "poem": { "type": "string" },
+              "isBefore2024": { "type": "boolean" },
+              "songs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["title"],
+                  "properties": {
+                    "title": { "type": "string" },
+                    "author": { "type": "string" },
+                    "description": { "type": "string" },
+                    "spotify": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

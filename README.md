@@ -30,20 +30,21 @@ Life is Tech ! で使われている BGM をまとめたリポジトリです。
 
 <!--
 ### :warning: WARNING :warning:
-- 以下のフォーマットを使用してください
+- 以下のフォーマットを使用してください（現在はJSONデータ `src/data/index.json` で管理されています。トップページの「曲を追加リクエストする」または直接 `/post/` にアクセスしてフォームから入力することで、正しいJSON形式で Issue を自動生成できます。
 
-  ```yml
-  - year: "2016" # 年 (Stringです！)
-    camps:
-    - name: "'16 Xmas Camp" # キャンプ名
-      background: "img/backgorunds/xmas2016_desktop_yellow.jpg" # 背景画像のURL
-      songs:
-      - title: "Hey Ho" # 曲名
-        author: "SEKAI NO OWARI" # 歌手名
-        description: |
-          [YouTube](//youtu.be/qfsr0S_QGOU)
-          [歌詞(J-Lyric.net)](http://j-lyric.net/artist/a055790/l03c659.html)
-        # リンクなど。"|"はYAMLの複数行記法です。
+  ```json
+  {
+    "name": "Spring Camp 2026",
+    "background": "../../res/img/backgrounds/camp_2026_spring.webp",
+    "songs": [
+      {
+        "title": "偉星人",
+        "author": "Vaundy",
+        "description": "🎤[DAM] [1279-96](...) [JOYSOUND][642661](...)\n[YouTube](//youtu.be/aDaWuvpB_Kw)\n[歌詞(歌ネット)](...)\n",
+        "spotify": "https://open.spotify.com/track/..."
+      }
+    ]
+  }
   ```
 -->
 
