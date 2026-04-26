@@ -131,7 +131,9 @@ document.getElementById('post-form')?.addEventListener('submit', (e) => {
       if (ytMatch) ytBody = `//youtu.be/${ytMatch[1]}`;
       else ytBody = youtubeUrl;
     }
-    descriptionLines.push(`[YouTube](${ytBody})`);
+    if (ytBody) {
+      descriptionLines.push(`[YouTube](${ytBody})`);
+    }
 
     // Lyrics line
     let lyricDomain = "歌詞";
