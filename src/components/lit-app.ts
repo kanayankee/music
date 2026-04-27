@@ -587,7 +587,7 @@ export class LitMusicApp extends LitElement {
             </a>.<br>
             <br>
             曲はこちらからリクエストできます！<br>
-            <a href="/post/">→掲載をリクエストする (GitHubアカウントが必要です)</a><br>
+            <a href="${base}post/">→掲載をリクエストする (GitHubアカウントが必要です)</a><br>
             <br>
             <small>This project is unofficial.</small>
           </p>
