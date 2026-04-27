@@ -81,12 +81,13 @@ export class LitEventCard extends LitElement {
 
   render() {
     // Determine background URL
+    const base = import.meta.env.BASE_URL;
     let bgUrl = '';
     if (this.event.background) {
-      bgUrl = this.event.background.replace('../../res/', '/res/');
+      bgUrl = this.event.background.replace('../../res/', `${base}res/`);
     } else {
       const isBefore2024 = (this.event as any).isBefore2024 === true;
-      bgUrl = isBefore2024 ? '/res/img/backgrounds/common_v1.webp' : '/res/img/backgrounds/common_v2.webp';
+      bgUrl = isBefore2024 ? `${base}res/img/backgrounds/common_v1.webp` : `${base}res/img/backgrounds/common_v2.webp`;
     }
     
     return html`

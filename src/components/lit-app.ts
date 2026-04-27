@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { fontAwesomeLink } from '../styles/shared-styles';
 import dataJson from '../data/index.json';
 import loadingWords from '../data/loading.json';
 import { RootData, EventData, Song } from '../types';
@@ -18,7 +19,7 @@ const COLORS = [
 ];
 
 function createId(str: string) {
-  return 'a-' + str.toString().replace(/[!-/:-@\\[-`{-~\\s]/g, '-');
+  return 'a-' + str.toString().replace(/[!-/:-@\\[-`{-~ \s]/g, '-');
 }
 
 @customElement('lit-music-app')
@@ -477,18 +478,19 @@ export class LitMusicApp extends LitElement {
         return parseInt(yearB) - parseInt(yearA);
       });
 
+    const base = import.meta.env.BASE_URL;
     return html`
-      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css" />
+      ${fontAwesomeLink}
       <div id="loading" class="${this.isLoaded ? 'loaded' : ''}">
         <p id="loading-message">${this.loadingWord}</p>
-        <img src="/res/img/loading.svg" alt="Loading">
+        <img src="${base}res/img/loading.svg" alt="Loading">
       </div>
 
       <header class="lit-header">
         <div class="lit-header__logos ${this.splashActive ? 'splash-active' : ''}">
-          <img src="/res/img/mark.svg" alt="Mark" id="mark">
-          <img src="/res/img/logo.svg" alt="Life is Tech!" id="logo">
-          <img src="/res/img/music.svg" alt="music" id="music">
+          <img src="${base}res/img/mark.svg" alt="Mark" id="mark">
+          <img src="${base}res/img/logo.svg" alt="Life is Tech!" id="logo">
+          <img src="${base}res/img/music.svg" alt="music" id="music">
         </div>
         <div class="lit-tabs">
           <button 
@@ -581,7 +583,7 @@ export class LitMusicApp extends LitElement {
             Tell me on <a href="https://www.facebook.com/LiTmusic-182225395894104" target="_blank" rel="noopener">Facebook</a>,<br>
             or<br>
             You can check it on <a href="https://github.com/lit-kansai-members/music" target="_blank" rel="noopener">
-              <img src="/res/img/github-mark.svg" alt="GitHub" class="icon-gh"> GitHub
+              <img src="${base}res/img/github-mark.svg" alt="GitHub" class="icon-gh"> GitHub
             </a>.<br>
             <br>
             曲はこちらからリクエストできます！<br>

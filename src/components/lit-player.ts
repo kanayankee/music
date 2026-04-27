@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { QueuedSong } from '../types';
+import { fontAwesomeLink } from '../styles/shared-styles';
 
 declare global {
   interface Window {
@@ -11,6 +12,7 @@ declare global {
 
 @customElement('lit-player')
 export class LitPlayer extends LitElement {
+  @property({ type: String }) eventName: string = '';
   @property({ type: Array }) queue: QueuedSong[] = [];
   @property({ type: Number }) currentIndex: number = 0;
 
@@ -381,7 +383,7 @@ export class LitPlayer extends LitElement {
     const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/0.jpg` : '';
 
     return html`
-      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css" />
+      ${fontAwesomeLink}
       <div class="lit-player ${this.isOpen ? 'lit-player--open' : ''}">
         <!-- YT Container FIRST (TOP) -->
         <div class="lit-player__yt ${this.isMVMode ? 'lit-player__yt--visible' : ''}">

@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { Song } from '../types';
 import { marked } from 'marked';
+import { fontAwesomeLink } from '../styles/shared-styles';
 
 @customElement('lit-song-item')
 export class LitSongItem extends LitElement {
@@ -120,15 +121,16 @@ export class LitSongItem extends LitElement {
   }
 
   render() {
+    const description = this.song.description || '';
     // Parse youtube ID from description if present
-    const ytMatch = this.song.description.match(/\/\/youtu\.be\/([\w-]+)/);
+    const ytMatch = description.match(/\/\/youtu\.be\/([\w-]+)/);
     const youtubeId = ytMatch ? ytMatch[1] : null;
     
     // Strip youtube text from description
-    const cleanDesc = this.song.description.replace(/^\s*\[YouTube\]\((\/\/youtu\.be\/([\w-]+))\)\s*$/mg, "");
+    const cleanDesc = description.replace(/^\s*\[YouTube\]\((\/\/youtu\.be\/([\w-]+))\)\s*$/mg, "");
 
     return html`
-      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css" />
+      ${fontAwesomeLink}
       <div class="lit-song ${youtubeId ? 'lit-song--playable' : ''}" @click=${youtubeId ? this.handlePlay : null}>
         <div class="lit-song__header">
           <div class="lit-song__title-wrap">

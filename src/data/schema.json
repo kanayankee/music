@@ -12,7 +12,7 @@
     "yearRecord": {
       "type": "object",
       "patternProperties": {
-        "^[0-9]{4}$": {
+        "^([0-9]{4}|.+)$": {
           "type": "array",
           "items": {
             "type": "object",
@@ -27,7 +27,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": ["title"],
+                  "required": ["title", "description"],
                   "properties": {
                     "title": { "type": "string" },
                     "author": { "type": "string" },
