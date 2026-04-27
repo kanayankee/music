@@ -528,7 +528,7 @@ export class LitMusicApp extends LitElement {
             <li class="nav-year ${isExpanded ? 'expanded' : ''}" 
                 style="background: ${isExpanded ? '#fff' : color}; border-color: ${color};"
             >
-              <a href="#" style="color: ${isExpanded ? color : '#fff'};" @click=${(e: Event) => this.scrollToId(e, createId('year-' + year))}>
+              <a href="#" style="color: ${isExpanded ? color : '#fff'};" @click=${(e: Event) => { this.scrollToId(e, createId('year-' + year)); this.toggleNav(index); }}>
                 <span class="label">${year}</span>
                 <span>${isNaN(Number(year)) ? html`<i class="fa-solid fa-star"></i>` : year.slice(-2)}</span>
               </a>

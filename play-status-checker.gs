@@ -1,5 +1,5 @@
 function checkYouTubeVideos() {
-    const jsonUrl = "https://raw.githubusercontent.com/lit-kansai-members/music/refs/heads/master/src/data/index.json";
+    const jsonUrl = "https://raw.githubusercontent.com/lit-kansai-members/music/refs/heads/main/src/data/index.json";
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("data");
 
     // スプレッドシートのヘッダー設定
@@ -102,11 +102,19 @@ function checkVideoAvailability(videoId) {
     try {
         // YouTube Data APIのAPIキーが必要です
         // スクリプトプロパティまたは環境変数から取得することをお勧めします
-        const API_KEY = PropertiesService.getScriptProperties().getProperty('YOUTUBE_API_KEY') ||
-            ""; // APIキーはスクリプトプロパティから取得するようにする
+        const API_KEY = PropertiesService.getScriptProperties().getProperty('YOUTUBE_API_KEY');
+
+        if (!API_KEY) {
+            console.error("YOUTUBE_API_KEY is not configured in Script Properties. Skipping YouTube status check.");
+            return true; // Assume available or throw error
+        }
 
         const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${API_KEY}&part=status`;
-        const response = UrlFetchApp.fetch(url);
+        const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+        if (response.getResponseCode() !== 200) {
+            console.error(`YouTube API returned error ${response.getResponseCode()}: ${response.getContentText()}`);
+            return true; 
+        }
         const data = JSON.parse(response.getContentText());
 
         // 動画が存在し、embedable（埋め込み可能）であれば再生可能と判断

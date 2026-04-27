@@ -136,14 +136,14 @@ document.getElementById('post-form')?.addEventListener('submit', (e) => {
     }
 
     // Lyrics line
-    let lyricDomain = "歌詞";
     if (lyricsUrl) {
+      let lyricDomain = "歌詞";
       try {
         const urlObj = new URL(lyricsUrl);
         lyricDomain = `歌詞(${urlObj.hostname})`;
       } catch(e) {}
+      descriptionLines.push(`[${lyricDomain}](${lyricsUrl})`);
     }
-    descriptionLines.push(`[${lyricDomain}](${lyricsUrl})`);
 
     return {
       title: title,

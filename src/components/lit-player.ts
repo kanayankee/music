@@ -248,6 +248,11 @@ export class LitPlayer extends LitElement {
         this.ytPlayer.loadVideoById(videoId);
       }
       this.isPlaying = true;
+    } else {
+      if (this.ytPlayer && typeof this.ytPlayer.pauseVideo === 'function') {
+        this.ytPlayer.pauseVideo();
+      }
+      this.isPlaying = false;
     }
   }
 
@@ -405,7 +410,7 @@ export class LitPlayer extends LitElement {
               <p class="lit-player__author">${song?.author || ''}</p>
             </div>
             ${song?.spotify ? html`
-              <a href="${song.spotify}" target="_blank" class="lit-player__spotify" title="Open on Spotify">
+              <a href="${song.spotify}" target="_blank" rel="noopener noreferrer" class="lit-player__spotify" title="Open on Spotify">
                 <i class="fa-brands fa-spotify"></i>
               </a>
             ` : ''}

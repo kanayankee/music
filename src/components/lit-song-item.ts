@@ -137,7 +137,7 @@ export class LitSongItem extends LitElement {
             <h4 class="lit-song__title">${this.song.title}</h4>
             <span class="lit-song__author">${this.song.author}</span>
             ${this.song.spotify ? html`
-              <a href="${this.song.spotify}" target="_blank" class="lit-btn-action lit-btn-action--spotify" title="Play on Spotify" @click=${(e: Event) => e.stopPropagation()}>
+              <a href="${this.song.spotify}" target="_blank" rel="noopener noreferrer" class="lit-btn-action lit-btn-action--spotify" title="Play on Spotify" @click=${(e: Event) => e.stopPropagation()}>
                 <i class="fab fa-spotify"></i>
               </a>
             ` : ''}
