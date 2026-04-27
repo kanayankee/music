@@ -14,9 +14,9 @@
     "marked": "^15.0.0"
   },
   "devDependencies": {
+    "cssnano": "^6.1.2",
     "postcss": "^8.4.38",
     "postcss-preset-env": "^9.5.0",
-    "cssnano": "^6.1.2",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }
