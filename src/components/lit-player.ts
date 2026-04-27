@@ -1,7 +1,11 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { QueuedSong } from '../types';
-import { fontAwesomeLink } from '../styles/shared-styles';
+import { 
+  spotifyIcon, playIcon, pauseIcon, shuffleIcon, repeatIcon, 
+  filmIcon, backwardIcon, forwardIcon, volumeHighIcon, 
+  volumeLowIcon, volumeXIcon, chevronUpIcon, chevronDownIcon 
+} from '../styles/icons';
 
 declare global {
   interface Window {
@@ -216,7 +220,10 @@ export class LitPlayer extends LitElement {
     }
   `;
 
-  updated(changedProperties: Map<string, any>) {
+  protected updated(changedProperties: Map<PropertyKey, unknown>) {
+    if (changedProperties.has('isMVMode')) {
+      this.updatePlayerSize();
+    }
     if (changedProperties.has('queue') || changedProperties.has('currentIndex')) {
       if (this.queue.length > 0) {
         this.isOpen = true;
@@ -230,6 +237,16 @@ export class LitPlayer extends LitElement {
     }
   }
   
+  private updatePlayerSize() {
+    if (this.ytPlayer && typeof this.ytPlayer.setSize === 'function') {
+      if (this.isMVMode) {
+        this.ytPlayer.setSize(640, 360);
+      } else {
+        this.ytPlayer.setSize(0, 0);
+      }
+    }
+  }
+
   private toggleOpen() {
     this.isOpen = !this.isOpen;
   }
@@ -238,8 +255,9 @@ export class LitPlayer extends LitElement {
     const song = this.queue[this.currentIndex];
     if (!song) return;
     
-    const ytMatch = song.description.match(/\/\/youtu\.be\/([\w-]+)/);
-    const videoId = ytMatch ? ytMatch[1] : null;
+    const description = song.description || '';
+    const ytMatch = description.match(/^\s*\[YouTube\]\((\/\/youtu\.be\/([\w-]+))\)\s*$/m);
+    const videoId = ytMatch ? ytMatch[2] : null;
     
     if (videoId) {
       if (!this.ytPlayer) {
@@ -388,7 +406,6 @@ export class LitPlayer extends LitElement {
     const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/0.jpg` : '';
 
     return html`
-      ${fontAwesomeLink}
       <div class="lit-player ${this.isOpen ? 'lit-player--open' : ''}">
         <!-- YT Container FIRST (TOP) -->
         <div class="lit-player__yt ${this.isMVMode ? 'lit-player__yt--visible' : ''}">
@@ -397,7 +414,7 @@ export class LitPlayer extends LitElement {
 
         ${this.queue.length > 0 ? html`
           <button class="lit-player__toggle" @click=${this.toggleOpen}>
-            <i class="fa ${this.isOpen ? 'fa-chevron-down' : 'fa-chevron-up'}"></i>
+            ${this.isOpen ? chevronDownIcon : chevronUpIcon}
           </button>
         ` : ''}
         
@@ -411,32 +428,32 @@ export class LitPlayer extends LitElement {
             </div>
             ${song?.spotify ? html`
               <a href="${song.spotify}" target="_blank" rel="noopener noreferrer" class="lit-player__spotify" title="Open on Spotify">
-                <i class="fa-brands fa-spotify"></i>
+                ${spotifyIcon}
               </a>
             ` : ''}
           </div>
           
           <div class="lit-player__controls">
             <button class="lit-btn-control" @click=${() => this.isShuffle = !this.isShuffle} style="color: ${this.isShuffle ? 'var(--color-blue)' : ''}" title="Shuffle">
-              <i class="fa-solid fa-shuffle"></i>
+              ${shuffleIcon}
             </button>
             <button class="lit-btn-control" @click=${() => this.isRepeat = !this.isRepeat} style="color: ${this.isRepeat ? 'var(--color-blue)' : ''}" title="Repeat One">
-              <i class="fa-solid fa-repeat"></i>
+              ${repeatIcon}
             </button>
             <button class="lit-btn-control lit-btn-control--mv ${this.isMVMode ? 'active' : ''}" @click=${() => this.isMVMode = !this.isMVMode} title="Toggle MV Mode">
-              <i class="fa-solid fa-film"></i>
+              ${filmIcon}
             </button>
             <button class="lit-btn-control" @click=${this.handlePrev} ?disabled=${this.currentIndex === 0 && !this.isShuffle}>
-              <i class="fa-solid fa-backward-step"></i>
+              ${backwardIcon}
             </button>
             <button class="lit-btn-control lit-btn-control--play" @click=${this.togglePlay} style="color: var(--color-red)">
-              <i class="fa-solid ${this.isPlaying ? 'fa-pause' : 'fa-play'}" style="font-size: 2rem;"></i>
+              ${this.isPlaying ? pauseIcon : playIcon}
             </button>
             <button class="lit-btn-control" @click=${this.handleNext} ?disabled=${this.currentIndex >= this.queue.length - 1 && !this.isRepeat && !this.isShuffle}>
-              <i class="fa-solid fa-forward-step"></i>
+              ${forwardIcon}
             </button>
             <div class="lit-player__volume">
-              <i class="fa-solid ${this.volume === 0 ? 'fa-volume-xmark' : (this.volume < 50 ? 'fa-volume-low' : 'fa-volume-high')}"></i>
+              ${this.volume === 0 ? volumeXIcon : (this.volume < 50 ? volumeLowIcon : volumeHighIcon)}
               <input type="range" min="0" max="100" .value=${this.volume} @input=${this.handleVolumeChange}>
             </div>
           </div>

@@ -1,9 +1,9 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { fontAwesomeLink } from '../styles/shared-styles';
+import { RootData, EventData, Song } from '../types';
+import { starIcon, arrowUpIcon } from '../styles/icons';
 import dataJson from '../data/index.json';
 import loadingWords from '../data/loading.json';
-import { RootData, EventData, Song } from '../types';
 
 import './lit-event-card';
 import './lit-player';
@@ -383,7 +383,7 @@ export class LitMusicApp extends LitElement {
       [allSongs[i], allSongs[j]] = [allSongs[j], allSongs[i]];
     }
 
-    const playableSongs = allSongs.filter(s => s.description.match(/\/\/youtu\.be\/([\w-]+)/));
+    const playableSongs = allSongs.filter(s => s.description.match(/^\s*\[YouTube\]\((\/\/youtu\.be\/([\w-]+))\)\s*$/m));
 
     if (playableSongs.length > 0) {
       this.playerQueue = playableSongs;
@@ -480,7 +480,6 @@ export class LitMusicApp extends LitElement {
 
     const base = import.meta.env.BASE_URL;
     return html`
-      ${fontAwesomeLink}
       <div id="loading" class="${this.isLoaded ? 'loaded' : ''}">
         <p id="loading-message">${this.loadingWord}</p>
         <img src="${base}res/img/loading.svg" alt="Loading">
@@ -518,7 +517,7 @@ export class LitMusicApp extends LitElement {
         <li class="nav-year" style="border-color: #333; color: #333;">
           <a href="#" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
             <span class="label">TOP</span>
-            <i class="fa-solid fa-arrow-up"></i>
+            ${arrowUpIcon}
           </a>
         </li>
         ${sortedYears.map(([year, events], index) => {
@@ -530,7 +529,7 @@ export class LitMusicApp extends LitElement {
             >
               <a href="#" style="color: ${isExpanded ? color : '#fff'};" @click=${(e: Event) => { this.scrollToId(e, createId('year-' + year)); this.toggleNav(index); }}>
                 <span class="label">${year}</span>
-                <span>${isNaN(Number(year)) ? html`<i class="fa-solid fa-star"></i>` : year.slice(-2)}</span>
+                <span>${isNaN(Number(year)) ? starIcon : year.slice(-2)}</span>
               </a>
               <ul class="nav-events" style="background: ${color};">
                 ${events.map(ev => html`

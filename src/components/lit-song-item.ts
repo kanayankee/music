@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Song } from '../types';
+import { RootData, EventData, Song } from '../types';
 import { marked } from 'marked';
-import { fontAwesomeLink } from '../styles/shared-styles';
+import { spotifyIcon, playIcon } from '../styles/icons';
 
 @customElement('lit-song-item')
 export class LitSongItem extends LitElement {
@@ -122,15 +122,14 @@ export class LitSongItem extends LitElement {
 
   render() {
     const description = this.song.description || '';
-    // Parse youtube ID from description if present
-    const ytMatch = description.match(/\/\/youtu\.be\/([\w-]+)/);
-    const youtubeId = ytMatch ? ytMatch[1] : null;
+    // Parse youtube ID from canonical [YouTube](//youtu.be/xxx) line
+    const ytMatch = description.match(/^\s*\[YouTube\]\((\/\/youtu\.be\/([\w-]+))\)\s*$/m);
+    const youtubeId = ytMatch ? ytMatch[2] : null;
     
     // Strip youtube text from description
     const cleanDesc = description.replace(/^\s*\[YouTube\]\((\/\/youtu\.be\/([\w-]+))\)\s*$/mg, "");
 
     return html`
-      ${fontAwesomeLink}
       <div class="lit-song ${youtubeId ? 'lit-song--playable' : ''}" @click=${youtubeId ? this.handlePlay : null}>
         <div class="lit-song__header">
           <div class="lit-song__title-wrap">
@@ -138,14 +137,14 @@ export class LitSongItem extends LitElement {
             <span class="lit-song__author">${this.song.author}</span>
             ${this.song.spotify ? html`
               <a href="${this.song.spotify}" target="_blank" rel="noopener noreferrer" class="lit-btn-action lit-btn-action--spotify" title="Play on Spotify" @click=${(e: Event) => e.stopPropagation()}>
-                <i class="fab fa-spotify"></i>
+                ${spotifyIcon}
               </a>
             ` : ''}
           </div>
           <div class="lit-song__actions">
             ${youtubeId ? html`
               <div class="lit-btn-action lit-btn-action--play" title="Play on YouTube">
-                <i class="fas fa-play-circle"></i>
+                ${playIcon}
               </div>
             ` : ''}
           </div>

@@ -1,4 +1,4 @@
-export default {
+export default (ctx) => ({
   plugins: {
     'postcss-preset-env': {
       stage: 1,
@@ -7,6 +7,6 @@ export default {
         'custom-properties': false
       }
     },
-    cssnano: {}
+    cssnano: ctx.mode === 'production' ? {} : false
   }
-}
+})
