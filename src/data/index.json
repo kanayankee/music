@@ -1043,6 +1043,19 @@
     ]
   },
   "school": {
+    "2019": [
+      {
+        "name": "School(Springseason 2019)",
+        "isBefore2024": true,
+        "songs": [
+          {
+            "title": "10時の方角",
+            "author": "sumika",
+            "description": "🎤[DAM] [6184-78](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=6184-78) [JOYSOUND] [435491](https://www.joysound.com/web/search/song/722544)\n[YouTube](//youtu.be/HFTB-tZs2a4)\n[歌詞(J-Lyric.net)](https://j-lyric.net/artist/a04b3e1/l04af4d.html)"
+          }
+        ]
+      }
+    ],
     "2020": [
       {
         "name": "LiT! School 2020 Spring",
@@ -1409,6 +1422,17 @@
             "author": "bokula.",
             "description": "🎤[DAM] [5423-40](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=5423-40) [JOYSOUND] [812225](https://www.joysound.com/web/search/song/919640)\n[YouTube](//youtu.be/IOBny9KrdMg)\n[歌詞(J-Lyric.net)](https://j-lyric.net/artist/a063048/l058ac7.html)\n",
             "spotify": "https://open.spotify.com/track/73qkznNMToO2Xfa7VzyBvm"
+          }
+        ]
+      },
+      {
+        "name": "Futurealise with Tech !",
+        "isBefore2024": true,
+        "songs": [
+          {
+            "title": "Letters to me",
+            "author": "天月 -あまつき-",
+            "description": "🎤[DAM] [6836-77](https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=6836-77) [JOYSOUND][486062](https://www.joysound.com/web/search/song/848751)\n[歌詞(KKBOX)](https://www.kkbox.com/jp/ja/song/5ZaL6ATBsZjzv_A3gc)\n[YouTube](//youtu.be/3iPU-wuB-CE)\n"
           }
         ]
       }

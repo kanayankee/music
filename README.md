@@ -65,6 +65,12 @@ yarn test
 
 ※曲の提案は Issues でお願いします。
 
+## Special Thanks
+
+- English×ITCamp 2014 ご参加のみなさま
+- てっくな予感ぷろじぇくと(とき・あおい・HasuLi・もやし・おとのん・なと・とっぽ・わくわくさん・ゆかり・のぞみ)
+- かずさ [@KazusaLiT](//x.com/KazusaLiT)（X）
+
 ## 曲情報提供者様
 
 - いかさん [@sanu22](//github.com/sanu22)
@@ -88,6 +94,7 @@ yarn test
 - あやめ [@ayame-r](//github.com/ayame-r)
 - simasimasimasima [@simasimasimasima](//github.com/simasimasimasima)
 - なつき [@Natsuki0117](//github.com/Natsuki0117)
+- いちげん [@fukuikazuharu](//x.com/fukuikazuharu)
 
 ## Contributors
 
