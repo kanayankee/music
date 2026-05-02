@@ -7,10 +7,14 @@ import { spotifyIcon, playIcon } from '../styles/icons';
 @customElement('lit-song-item')
 export class LitSongItem extends LitElement {
   @property({ type: Object }) song!: Song;
+  @property({ type: Boolean, attribute: 'is-playing' }) isPlaying = false;
+  @property({ type: Boolean }) isMobile = false;
 
   static styles = css`
     :host {
       display: block;
+      position: relative;
+      transition: margin-bottom 0.3s ease;
     }
 
     .lit-song {
@@ -45,6 +49,13 @@ export class LitSongItem extends LitElement {
       display: flex;
       align-items: baseline;
       gap: 0.8rem;
+    }
+
+    .lit-song__title-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      min-width: 0;
     }
 
     .lit-song__title {
@@ -110,7 +121,41 @@ export class LitSongItem extends LitElement {
     .lit-song__desc a:hover {
       text-decoration: underline;
     }
+
+    .lit-song__embed {
+      margin-top: 1rem;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: var(--radius-sm);
+      background: #000;
+    }
+
+    .lit-song__embed iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    @media (max-width: 768px) {
+      .lit-song__title {
+        font-size: 1.1rem; /* Reduced from 1.25rem */
+      }
+      .lit-song__author {
+        font-size: 0.85rem;
+      }
+      .lit-song__title-wrap {
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: flex-start;
+      }
+      .lit-song__title-row {
+        width: 100%;
+      }
+    }
   `;
+
 
   private handlePlay() {
     this.dispatchEvent(new CustomEvent('play-song', {
@@ -137,22 +182,73 @@ export class LitSongItem extends LitElement {
     }
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  private handleResize = () => {
+    if (this.isPlaying) {
+      this.reportPlaceholderPosition();
+    }
+  }
+
+  updated(changedProperties: Map<string, any>) {
+    if (changedProperties.has('isPlaying')) {
+      if (this.isPlaying) {
+        // Wait for placeholder to render
+        setTimeout(() => this.reportPlaceholderPosition(), 50);
+      }
+    }
+  }
+
+  private reportPlaceholderPosition() {
+    const ph = this.shadowRoot?.getElementById('video-placeholder');
+    if (ph) {
+      const rect = ph.getBoundingClientRect();
+      const top = rect.top + window.scrollY; // Absolute document position
+      this.dispatchEvent(new CustomEvent('video-position-changed', {
+        detail: { top },
+        bubbles: true,
+        composed: true
+      }));
+    }
+  }
+
   render() {
     const description = this.song.description || '';
     const ytMatch = this.song.youtubeUrl?.match(/(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
     const youtubeId = ytMatch ? ytMatch[1] : null;
+    const showInlinePlayer = this.isMobile && this.isPlaying && youtubeId;
+    const embedUrl = youtubeId ? `https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0&modestbranding=1` : '';
 
     return html`
       <div class="lit-song ${youtubeId ? 'lit-song--playable' : ''}" @click=${youtubeId ? this.handlePlay : null}>
         <div class="lit-song__header">
           <div class="lit-song__title-wrap">
-            <h4 class="lit-song__title">${this.song.title}</h4>
+            ${this.isMobile ? html`
+              <div class="lit-song__title-row">
+                <h4 class="lit-song__title">${this.song.title}</h4>
+                ${this.song.spotify ? html`
+                  <a href="${this.song.spotify}" target="_blank" rel="noopener noreferrer" class="lit-btn-action lit-btn-action--spotify" title="Play on Spotify" @click=${(e: Event) => e.stopPropagation()}>
+                    ${spotifyIcon}
+                  </a>
+                ` : ''}
+              </div>
+            ` : html`
+              <h4 class="lit-song__title">${this.song.title}</h4>
+              ${this.song.spotify ? html`
+                <a href="${this.song.spotify}" target="_blank" rel="noopener noreferrer" class="lit-btn-action lit-btn-action--spotify" title="Play on Spotify" @click=${(e: Event) => e.stopPropagation()}>
+                  ${spotifyIcon}
+                </a>
+              ` : ''}
+            `}
             <span class="lit-song__author">${this.song.author}</span>
-            ${this.song.spotify ? html`
-              <a href="${this.song.spotify}" target="_blank" rel="noopener noreferrer" class="lit-btn-action lit-btn-action--spotify" title="Play on Spotify" @click=${(e: Event) => e.stopPropagation()}>
-                ${spotifyIcon}
-              </a>
-            ` : ''}
           </div>
           <div class="lit-song__actions">
             ${youtubeId ? html`
@@ -182,6 +278,16 @@ export class LitSongItem extends LitElement {
             ` : ''}
           </div>
         </div>
+        ${showInlinePlayer ? html`
+          <div class="lit-song__embed">
+            <iframe
+              src="${embedUrl}"
+              title="${this.song.title}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        ` : ''}
       </div>
     `;
   }

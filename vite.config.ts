@@ -11,6 +11,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: base,
+    server: {
+      allowedHosts: true
+    },
     build: {
       outDir: 'dist',
       rollupOptions: {

@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { RootData, EventData, Song } from '../types';
+import { RootData, EventData, Song, QueuedSong } from '../types';
 import { starIcon, arrowUpIcon, arrowDownIcon } from '../styles/icons';
 import { marked } from 'marked';
 import dataJson from '../data/index.json';
@@ -29,7 +29,7 @@ export class LitMusicApp extends LitElement {
   private activeTab: 'camp' | 'school' | 'event' = 'camp';
 
   @state()
-  private playerQueue: Song[] = [];
+  private playerQueue: QueuedSong[] = [];
 
   @state()
   private currentSongIndex: number = 0;
@@ -39,6 +39,9 @@ export class LitMusicApp extends LitElement {
 
   @state()
   private playerQueueTab: 'camp' | 'school' | 'event' | '' = '';
+
+  @state()
+  private videoOffsetTop = 0;
 
   @state()
   private isLoaded: boolean = false;
@@ -58,13 +61,54 @@ export class LitMusicApp extends LitElement {
   @state()
   private markdownModalTitle = '';
 
+  @state()
+  private isMVMode: boolean = false;
+
+  @state()
+  private isMobile: boolean = window.innerWidth <= 768;
+
+  @state()
+  private navigationTop: number = 0;
+
   constructor() {
     super();
     const msgs = loadingWords || ["なんと！　ななんと！　なななんと！"];
     this.loadingWord = msgs[Math.floor(Math.random() * msgs.length)];
   }
 
+  private get currentPlayingSong(): QueuedSong | undefined {
+    return this.playerQueue[this.currentSongIndex];
+  }
+
+  private syncResponsiveMode() {
+    const nextIsMobile = window.innerWidth <= 768;
+    if (nextIsMobile !== this.isMobile) {
+      this.isMobile = nextIsMobile;
+    }
+
+    if (this.isMobile) {
+      this.classList.remove('mv-active');
+    } else if (this.isMVMode) {
+      this.classList.add('mv-active');
+    } else {
+      this.classList.remove('mv-active');
+    }
+  }
+
+  private handleResize = () => {
+    this.syncResponsiveMode();
+    this.updateNavigationTop();
+  }
+
+  private updateNavigationTop() {
+    const header = this.shadowRoot?.querySelector('.lit-header') as HTMLElement | null;
+    if (!header) return;
+    this.navigationTop = Math.ceil(header.getBoundingClientRect().height + 72);
+  }
+
   firstUpdated() {
+    this.updateNavigationTop();
+
     setTimeout(() => {
       const mark = this.shadowRoot?.querySelector('#mark') as HTMLElement;
       if (mark) {
@@ -90,6 +134,56 @@ export class LitMusicApp extends LitElement {
       display: block;
       min-height: 100vh;
       padding-bottom: 100px; /* space for player */
+      transition: padding-right 0.3s ease;
+    }
+
+    :host(.mv-active) {
+      /* Padding moved to children to avoid squashing the whole container */
+    }
+
+    :host(.mv-active) .lit-header {
+      width: 100%;
+      padding-right: 50%;
+      box-sizing: border-box;
+    }
+
+    :host(.mv-active) .lit-main {
+      max-width: none;
+      margin: 0;
+      width: 100%;
+      padding-right: 50%;
+      box-sizing: border-box;
+    }
+
+    :host(.mv-active) #navigations {
+      right: calc(50% + 1rem);
+    }
+
+    @media (max-width: 768px) {
+      :host {
+        padding-bottom: 0; /* Player bar is hidden on mobile */
+        position: relative; /* Ensure absolute positioning works for lit-player */
+      }
+      :host(.mv-active) {
+        padding-bottom: 0;
+      }
+      :host(.mv-active) .lit-header {
+        width: 100%;
+        padding-right: 0;
+      }
+      :host(.mv-active) .lit-main {
+        width: 100%;
+        padding-right: 0;
+        box-sizing: border-box;
+      }
+      :host(.mv-active) #navigations {
+        display: none;
+      }
+
+      .lit-main {
+        padding-right: 0;
+        box-sizing: border-box;
+      }
     }
 
     .lit-modal-overlay {
@@ -420,8 +514,7 @@ export class LitMusicApp extends LitElement {
   }
 
   private handlePlayRandom() {
-    const currentYearsData = allData[this.activeTab];
-    const allSongs = Object.values(currentYearsData).flatMap(events => events.flatMap(e => e.songs));
+    const allSongs = this.buildTabQueue();
 
     // Shuffle
     for (let i = allSongs.length - 1; i > 0; i--) {
@@ -434,6 +527,13 @@ export class LitMusicApp extends LitElement {
     if (playableSongs.length > 0) {
       this.playerQueue = playableSongs;
       this.currentSongIndex = 0;
+      this.playerQueueTab = this.activeTab;
+      this.currentEventName = this.playerQueue[0]?.eventName || '';
+      
+      const player = this.shadowRoot?.querySelector('lit-player') as any;
+      if (!this.isMobile && player && typeof player.playSongImmediately === 'function') {
+        player.playSongImmediately(this.playerQueue, this.currentSongIndex);
+      }
     } else {
       alert('No playable songs found in this category.');
     }
@@ -459,8 +559,8 @@ export class LitMusicApp extends LitElement {
     }
   }
 
-  private buildTabQueue(): any[] {
-    const queue: any[] = [];
+  private buildTabQueue(): QueuedSong[] {
+    const queue: QueuedSong[] = [];
     const currentYearsData = allData[this.activeTab];
     const sortedYearsData = Object.entries(currentYearsData)
       .sort(([yearA], [yearB]) => {
@@ -496,6 +596,12 @@ export class LitMusicApp extends LitElement {
     this.playerQueueTab = this.activeTab;
     this.currentSongIndex = fullQueue.findIndex(s => s.title === e.detail.song.title && s.eventName === e.detail.eventName);
     if (this.currentSongIndex === -1) this.currentSongIndex = 0;
+    this.currentEventName = e.detail.eventName;
+    
+    const player = this.shadowRoot?.querySelector('lit-player') as any;
+    if (!this.isMobile && player && typeof player.playSongImmediately === 'function') {
+      player.playSongImmediately(this.playerQueue, this.currentSongIndex);
+    }
   }
 
   private scrollToId(e: Event, id: string) {
@@ -529,8 +635,30 @@ export class LitMusicApp extends LitElement {
     this.isMarkdownModalOpen = false;
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.syncResponsiveMode();
+    this.addEventListener('video-position-changed', this.handleVideoPositionChanged as EventListener);
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('video-position-changed', this.handleVideoPositionChanged as EventListener);
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  private handleVideoPositionChanged = (e: CustomEvent<{ top: number }>) => {
+    const appRect = this.getBoundingClientRect();
+    // e.detail.top is the absolute document Y coordinate.
+    // appRect.top + window.scrollY is the absolute document Y coordinate of lit-app.
+    const appAbsoluteTop = appRect.top + window.scrollY;
+    this.videoOffsetTop = e.detail.top - appAbsoluteTop;
+  }
+
   render() {
     const currentYearsData = allData[this.activeTab];
+
     const sortedYears = Object.entries(currentYearsData)
       .sort(([yearA], [yearB]) => {
         if (yearA === '番外編') return 1;
@@ -573,7 +701,8 @@ export class LitMusicApp extends LitElement {
         </div>
       </header>
 
-      <ul id="navigations">
+      ${!this.isMobile ? html`
+      <ul id="navigations" style="${this.navigationTop ? `--nav-top: ${this.navigationTop}px;` : ''}">
         <li class="nav-year" style="border-color: #333; color: #333; background: #333;">
           <a href="#" style="color: #fff;" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
             <span class="label">TOP</span>
@@ -598,6 +727,7 @@ export class LitMusicApp extends LitElement {
           </a>
         </li>
       </ul>
+      ` : ''}
 
       <main class="lit-main" @open-markdown=${this.handleOpenMarkdown}>
         ${sortedYears.map(([year, events]) => {
@@ -618,6 +748,9 @@ export class LitMusicApp extends LitElement {
               <div data-event="${ev.name}">
                 <lit-event-card 
                   .event=${{ ...ev, year }}
+                  .playingSongTitle=${this.currentPlayingSong?.title || ''}
+                  .playingEventName=${this.currentPlayingSong?.eventName || this.currentEventName}
+                  .isMobile=${this.isMobile}
                   @play-song-queue=${this.handlePlaySongWithQueue}
                 ></lit-event-card>
               </div>
@@ -662,12 +795,23 @@ export class LitMusicApp extends LitElement {
         </div>
       </footer>
 
+      ${!this.isMobile ? html`
       <lit-player 
+        style="--video-offset-top: ${this.videoOffsetTop}px;"
         .queue=${this.playerQueue}
         .currentIndex=${this.currentSongIndex}
         .eventName=${this.currentEventName}
         @index-changed=${(e: CustomEvent<{ index: number }>) => { this.currentSongIndex = e.detail.index; }}
+        @mv-mode-changed=${(e: CustomEvent<{ active: boolean }>) => { 
+          this.isMVMode = e.detail.active;
+          if (this.isMVMode) {
+            this.classList.add('mv-active');
+          } else {
+            this.classList.remove('mv-active');
+          }
+        }}
       ></lit-player>
+      ` : ''}
     `;
   }
 }

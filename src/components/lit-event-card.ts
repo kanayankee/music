@@ -6,6 +6,10 @@ import './lit-song-item';
 @customElement('lit-event-card')
 export class LitEventCard extends LitElement {
   @property({ type: Object }) event!: EventData;
+  @property({ type: String }) playingSongTitle = '';
+  @property({ type: String }) playingEventName = '';
+  @property({ type: Boolean }) isMobile = false;
+
 
   static styles = css`
     :host {
@@ -77,7 +81,23 @@ export class LitEventCard extends LitElement {
       flex-direction: column;
       gap: 1rem;
     }
+
+    @media (max-width: 768px) {
+      .lit-event-card__title {
+        font-size: 1.5rem; /* Reduced from 2rem for mobile */
+      }
+      .lit-event-card__theme {
+        font-size: 0.85rem;
+      }
+      .lit-event-card__year {
+        font-size: 1rem;
+      }
+      .lit-event-card__header {
+        padding: 1.5rem 0;
+      }
+    }
   `;
+
 
   render() {
     // Determine background URL
@@ -101,7 +121,12 @@ export class LitEventCard extends LitElement {
         </header>
         <div class="lit-event-card__body">
           ${this.event.songs.map((song) => html`
-            <lit-song-item .song=${song} @play-song=${(e: CustomEvent) => this.handlePlaySongInEvent(e, song)}></lit-song-item>
+            <lit-song-item 
+              .song=${song} 
+              .isMobile=${this.isMobile}
+              ?is-playing=${this.playingSongTitle === song.title && this.playingEventName === this.event.name}
+              @play-song=${(e: CustomEvent) => this.handlePlaySongInEvent(e, song)}>
+            </lit-song-item>
           `)}
         </div>
       </article>
