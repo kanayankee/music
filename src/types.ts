@@ -2,6 +2,13 @@ export interface Song {
   title: string;
   author: string;
   description: string;
+  damNumber: string;
+  damUrl: string;
+  joyNumber: string;
+  joyUrl: string;
+  lyricsSiteName?: string;
+  lyricsUrl?: string;
+  youtubeUrl?: string;
   spotify?: string;
   youtubeId?: string; // Appended after parsing
 }

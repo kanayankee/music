@@ -27,11 +27,18 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": ["title", "description"],
+                  "required": ["title", "description", "damNumber", "damUrl", "joyNumber", "joyUrl"],
                   "properties": {
                     "title": { "type": "string" },
                     "author": { "type": "string" },
                     "description": { "type": "string" },
+                    "damNumber": { "type": "string" },
+                    "damUrl": { "type": "string" },
+                    "joyNumber": { "type": "string" },
+                    "joyUrl": { "type": "string" },
+                    "lyricsSiteName": { "type": "string" },
+                    "lyricsUrl": { "type": "string" },
+                    "youtubeUrl": { "type": "string" },
                     "spotify": { "type": "string" }
                   }
                 }

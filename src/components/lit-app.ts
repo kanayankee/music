@@ -1,7 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { RootData, EventData, Song } from '../types';
-import { starIcon, arrowUpIcon } from '../styles/icons';
+import { starIcon, arrowUpIcon, arrowDownIcon } from '../styles/icons';
+import { marked } from 'marked';
 import dataJson from '../data/index.json';
 import loadingWords from '../data/loading.json';
 
@@ -34,9 +35,6 @@ export class LitMusicApp extends LitElement {
   private currentSongIndex: number = 0;
 
   @state()
-  private expandedNavIndex: number | null = null;
-
-  @state()
   private currentEventName: string = '';
 
   @state()
@@ -50,6 +48,15 @@ export class LitMusicApp extends LitElement {
 
   @state()
   private loadingWord: string = '';
+
+  @state()
+  private isMarkdownModalOpen = false;
+
+  @state()
+  private markdownModalContent = '';
+  
+  @state()
+  private markdownModalTitle = '';
 
   constructor() {
     super();
@@ -83,6 +90,65 @@ export class LitMusicApp extends LitElement {
       display: block;
       min-height: 100vh;
       padding-bottom: 100px; /* space for player */
+    }
+
+    .lit-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    .lit-modal-content {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 600px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+    @keyframes modalFadeIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .lit-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-background);
+    }
+    .lit-modal-header h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--color-text-primary);
+    }
+    .lit-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+    }
+    .lit-modal-close:hover {
+      color: var(--color-text-primary);
+    }
+    .lit-modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      color: var(--color-text-primary);
+      line-height: 1.6;
+    }
+    .lit-modal-body p {
+      margin-top: 0;
     }
 
     .lit-header {
@@ -167,7 +233,7 @@ export class LitMusicApp extends LitElement {
       margin-top: 1rem;
       background: #f1f5f9;
       padding: 4px;
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-full);
     }
 
     .lit-tabs__button {
@@ -177,7 +243,7 @@ export class LitMusicApp extends LitElement {
       font-size: 1rem;
       font-weight: bold;
       color: var(--color-text-secondary);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-full);
       cursor: pointer;
       transition: var(--transition-fast);
     }
@@ -324,52 +390,32 @@ export class LitMusicApp extends LitElement {
     }
 
     .nav-year > a .label {
-      padding-right: 0.5em;
       display: none;
     }
     
-    .nav-year.expanded > a .label {
+    .nav-year:hover > a .label {
       display: inline;
     }
 
-    .nav-year.expanded {
-      background: #fff;
+    .nav-year > a .short-label {
+      display: inline;
     }
 
-    .nav-events {
-      position: absolute;
-      right: 0;
-      top: 1.5em;
-      padding: 0.5em;
-      border-radius: 0 0 0.5em 0.5em;
-      list-style: none;
-      margin: 0;
+    .nav-year:hover > a .short-label {
       display: none;
     }
 
-    .nav-year.expanded .nav-events {
-      display: block;
+    .nav-year:hover {
+      background: #fff !important;
     }
 
-    .nav-event {
-      white-space: nowrap;
-      border-top: solid 1px #fff;
-    }
-    .nav-event:first-child { border: none; }
-    .nav-event a {
-      color: #fff;
-      text-decoration: none;
-      display: block;
-      padding: 0.3em;
-    }
-    .nav-event a:hover {
-      background: rgba(255,255,255,0.2);
+    .nav-year:hover > a {
+      color: inherit !important;
     }
   `;
 
   private setTab(tab: 'camp' | 'school' | 'event') {
     this.activeTab = tab;
-    this.expandedNavIndex = null;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -383,7 +429,7 @@ export class LitMusicApp extends LitElement {
       [allSongs[i], allSongs[j]] = [allSongs[j], allSongs[i]];
     }
 
-    const playableSongs = allSongs.filter(s => s.description.match(/^\s*\[YouTube\]\((\/\/youtu\.be\/([\w-]+))\)\s*$/m));
+    const playableSongs = allSongs.filter(s => s.youtubeUrl && s.youtubeUrl.match(/(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/));
 
     if (playableSongs.length > 0) {
       this.playerQueue = playableSongs;
@@ -452,14 +498,6 @@ export class LitMusicApp extends LitElement {
     if (this.currentSongIndex === -1) this.currentSongIndex = 0;
   }
 
-  private toggleNav(index: number) {
-    if (this.expandedNavIndex === index) {
-      this.expandedNavIndex = null;
-    } else {
-      this.expandedNavIndex = index;
-    }
-  }
-
   private scrollToId(e: Event, id: string) {
     e.preventDefault();
     const el = this.shadowRoot?.querySelector('#' + id);
@@ -467,6 +505,28 @@ export class LitMusicApp extends LitElement {
       const top = el.getBoundingClientRect().top + window.scrollY - 100;
       window.scrollTo({ top, behavior: 'smooth' });
     }
+  }
+
+  private async handleOpenMarkdown(e: CustomEvent<{url: string}>) {
+    const url = e.detail.url;
+    const filename = url.split('/').pop() || 'Markdown';
+    this.markdownModalTitle = decodeURIComponent(filename.replace(/\.md$/i, ''));
+    this.isMarkdownModalOpen = true;
+    this.markdownModalContent = '<p>Loading...</p>';
+    
+    try {
+      // relative URL fetching
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Network error');
+      const text = await res.text();
+      this.markdownModalContent = await marked.parse(text, { breaks: true });
+    } catch (err) {
+      this.markdownModalContent = '<p style="color:var(--color-red)">Failed to load content.</p>';
+    }
+  }
+
+  private closeMarkdownModal() {
+    this.isMarkdownModalOpen = false;
   }
 
   render() {
@@ -514,36 +574,32 @@ export class LitMusicApp extends LitElement {
       </header>
 
       <ul id="navigations">
-        <li class="nav-year" style="border-color: #333; color: #333;">
-          <a href="#" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+        <li class="nav-year" style="border-color: #333; color: #333; background: #333;">
+          <a href="#" style="color: #fff;" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
             <span class="label">TOP</span>
-            ${arrowUpIcon}
+            <span class="short-label">${arrowUpIcon}</span>
           </a>
         </li>
-        ${sortedYears.map(([year, events], index) => {
+        ${sortedYears.map(([year, _events], index) => {
       const color = COLORS[index % COLORS.length];
-      const isExpanded = this.expandedNavIndex === index;
       return html`
-            <li class="nav-year ${isExpanded ? 'expanded' : ''}" 
-                style="background: ${isExpanded ? '#fff' : color}; border-color: ${color};"
-            >
-              <a href="#" style="color: ${isExpanded ? color : '#fff'};" @click=${(e: Event) => { this.scrollToId(e, createId('year-' + year)); this.toggleNav(index); }}>
+            <li class="nav-year" style="background: ${color}; border-color: ${color}; color: ${color};">
+              <a href="#" style="color: #fff;" @click=${(e: Event) => { this.scrollToId(e, createId('year-' + year)); }}>
                 <span class="label">${year}</span>
-                <span>${isNaN(Number(year)) ? starIcon : year.slice(-2)}</span>
+                <span class="short-label">${isNaN(Number(year)) ? starIcon : year.slice(-2)}</span>
               </a>
-              <ul class="nav-events" style="background: ${color};">
-                ${events.map(ev => html`
-                  <li class="nav-event">
-                    <a href="#" @click=${(e: Event) => this.scrollToId(e, createId(ev.name))}>${ev.name}</a>
-                  </li>
-                `)}
-              </ul>
             </li>
           `;
     })}
+        <li class="nav-year" style="border-color: #333; color: #333; background: #333;">
+          <a href="#" style="color: #fff;" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }}>
+            <span class="label">BOTTOM</span>
+            <span class="short-label">${arrowDownIcon}</span>
+          </a>
+        </li>
       </ul>
 
-      <main class="lit-main">
+      <main class="lit-main" @open-markdown=${this.handleOpenMarkdown}>
         ${sortedYears.map(([year, events]) => {
           const sortedEvents = [...events].sort((a, b) => {
             const getSeasonRank = (name: string) => {
@@ -569,6 +625,18 @@ export class LitMusicApp extends LitElement {
           `;
         })}
       </main>
+
+      ${this.isMarkdownModalOpen ? html`
+        <div class="lit-modal-overlay" @click=${this.closeMarkdownModal}>
+          <div class="lit-modal-content" @click=${(e: Event) => e.stopPropagation()}>
+            <div class="lit-modal-header">
+              <h3>${this.markdownModalTitle}</h3>
+              <button class="lit-modal-close" @click=${this.closeMarkdownModal}>&times;</button>
+            </div>
+            <div class="lit-modal-body" .innerHTML=${this.markdownModalContent}></div>
+          </div>
+        </div>
+      ` : ''}
 
       <footer class="lit-footer">
         <div class="lit-footer__inner">

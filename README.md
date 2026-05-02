@@ -40,7 +40,14 @@ Life is Tech ! で使われている BGM をまとめたリポジトリです。
       {
         "title": "偉星人",
         "author": "Vaundy",
-        "description": "🎤[DAM] [1279-96](...) [JOYSOUND][642661](...)\n[YouTube](//youtu.be/aDaWuvpB_Kw)\n[歌詞(歌ネット)](...)\n",
+        "description": "映画「○○」主題歌",
+        "damNumber": "1279-96",
+        "damUrl": "https://www.clubdam.com/...",
+        "joyNumber": "642661",
+        "joyUrl": "https://www.joysound.com/...",
+        "lyricsSiteName": "歌ネット",
+        "lyricsUrl": "https://www.uta-net.com/...",
+        "youtubeUrl": "//youtu.be/aDaWuvpB_Kw",
         "spotify": "https://open.spotify.com/track/..."
       }
     ]

@@ -26,8 +26,11 @@ export class LitPlayer extends LitElement {
   @state() private isShuffle = false;
   @state() private isRepeat = false;
   @state() private volume = 100;
+  @state() private currentTime = 0;
+  @state() private duration = 0;
   
   private ytPlayer: any = null;
+  private progressInterval: number | undefined;
 
   static styles = css`
     :host {
@@ -54,10 +57,12 @@ export class LitPlayer extends LitElement {
     .lit-player__container {
       max-width: 1024px;
       margin: 0 auto;
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
       padding: 0 16px;
       height: 80px;
+      gap: 24px;
     }
     
     .lit-player__toggle {
@@ -79,11 +84,11 @@ export class LitPlayer extends LitElement {
     }
 
     .lit-player__info {
-      flex: 1;
       display: flex;
       align-items: center;
       gap: 16px;
       overflow: hidden;
+      min-width: 0;
     }
 
     .lit-player__thumb {
@@ -116,7 +121,15 @@ export class LitPlayer extends LitElement {
     }
 
     .lit-player__controls {
-      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      width: 420px;
+    }
+
+    .lit-player__control-buttons {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -146,6 +159,10 @@ export class LitPlayer extends LitElement {
     .lit-btn-control--play {
       font-size: 2rem;
       color: var(--color-red);
+      background-color: transparent;
+      border-radius: 0;
+      width: auto;
+      height: auto;
     }
     .lit-btn-control--play {
       animation: color-fade 12s infinite;
@@ -161,6 +178,72 @@ export class LitPlayer extends LitElement {
     .lit-btn-control--play:hover {
       opacity: 0.8;
       transform: scale(1.1);
+      background-color: transparent;
+    }
+
+
+    .lit-player__progress-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      background: transparent; /* The gradient will be applied via inline style */
+      border-radius: 2px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .progress-bar:hover {
+      opacity: 0.9;
+    }
+
+    .progress-bar::-webkit-slider-runnable-track {
+      -webkit-appearance: none;
+      height: 4px;
+    }
+    .progress-bar::-moz-range-track {
+      -moz-appearance: none;
+      height: 4px;
+    }
+
+    .progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -4px; /* (track-height - thumb-height) / 2 */
+      width: 12px;
+      height: 12px;
+      background: var(--color-text-primary);
+      border-radius: 50%;
+      border: none;
+      transition: transform 0.2s;
+    }
+    .progress-bar:hover::-webkit-slider-thumb {
+      transform: scale(1.2);
+    }
+
+    .progress-bar::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      background: var(--color-text-primary);
+      border-radius: 50%;
+      border: none;
+      transition: transform 0.2s;
+    }
+    .progress-bar:hover::-moz-range-thumb {
+      transform: scale(1.2);
+    }
+
+    .time {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      min-width: 35px;
+      text-align: center;
     }
 
     .lit-player__yt {
@@ -188,9 +271,10 @@ export class LitPlayer extends LitElement {
     .lit-player__volume {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-left: 16px;
+      justify-content: flex-end;
+      gap: 12px;
       color: var(--color-text-secondary);
+      min-width: 0;
     }
     .lit-player__volume input {
       width: 80px;
@@ -252,12 +336,18 @@ export class LitPlayer extends LitElement {
   }
 
   private loadCurrentSong() {
+    this.currentTime = 0;
+    this.duration = 0;
+    if (this.progressInterval) {
+      clearInterval(this.progressInterval);
+    }
+
     const song = this.queue[this.currentIndex];
     if (!song) return;
     
-    const description = song.description || '';
-    const ytMatch = description.match(/^\s*\[YouTube\]\((\/\/youtu\.be\/([\w-]+))\)\s*$/m);
-    const videoId = ytMatch ? ytMatch[2] : null;
+    const ytUrl = song.youtubeUrl || '';
+    const ytMatch = ytUrl.match(/(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+    const videoId = ytMatch ? ytMatch[1] : null;
     
     if (videoId) {
       if (!this.ytPlayer) {
@@ -302,18 +392,29 @@ export class LitPlayer extends LitElement {
   }
 
   private onPlayerReady(event: any) {
+    event.target.setVolume(this.volume);
     event.target.playVideo();
   }
 
+  private isSeeking = false;
+
   private onPlayerStateChange(event: any) {
-    // 0 = ended, 1 = playing, 2 = paused
-    if (event.data === 1) {
+    if (event.data === 1) { // Playing
       this.isPlaying = true;
-    } else if (event.data === 2) {
+      event.target.setVolume(this.volume);
+      this.duration = this.ytPlayer.getDuration();
+      this.progressInterval = setInterval(() => {
+        if (!this.isSeeking) {
+          this.currentTime = this.ytPlayer.getCurrentTime();
+        }
+      }, 250);
+    } else if (event.data === 2) { // Paused
       this.isPlaying = false;
-    } else if (event.data === 0) {
+      clearInterval(this.progressInterval);
+    } else if (event.data === 0) { // Ended
+      this.isPlaying = false;
+      clearInterval(this.progressInterval);
       if (this.isRepeat) {
-        // Repeat One: Restart the same video
         this.ytPlayer.playVideo();
       } else {
         this.handleNext();
@@ -325,9 +426,11 @@ export class LitPlayer extends LitElement {
     if (!this.ytPlayer) return;
     if (this.isPlaying) {
       this.ytPlayer.pauseVideo();
-    } else {
+    }
+    else {
       this.ytPlayer.playVideo();
     }
+    this.updatePlayerSize();
   }
 
   private handleNext() {
@@ -399,13 +502,57 @@ export class LitPlayer extends LitElement {
     }
   }
 
+  private formatTime(time: number) {
+    if (isNaN(time) || time === 0) return '0:00';
+    const seconds = Math.round(time);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+  private handleSeek(e: Event) {
+    if (!this.duration) return;
+    const newTime = parseFloat((e.target as HTMLInputElement).value);
+    this.currentTime = newTime;
+    this.ytPlayer.seekTo(newTime);
+  }
+
+  private handleSeekStart() {
+    this.isSeeking = true;
+  }
+
+  private handleSeekEnd(e: Event) {
+    this.isSeeking = false;
+    // Final seek after releasing
+    this.handleSeek(e);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  private handleKeyDown = (e: KeyboardEvent) => {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      this.togglePlay();
+    }
+  }
+
+
   render() {
     const song = this.queue[this.currentIndex];
-    const ytMatch = song?.description.match(/\/\/youtu\.be\/([\w-]+)/);
+    const ytMatch = song?.youtubeUrl?.match(/(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
     const videoId = ytMatch ? ytMatch[1] : null;
     const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/0.jpg` : '';
 
     return html`
+
       <div class="lit-player ${this.isOpen ? 'lit-player--open' : ''}">
         <!-- YT Container FIRST (TOP) -->
         <div class="lit-player__yt ${this.isMVMode ? 'lit-player__yt--visible' : ''}">
@@ -434,25 +581,46 @@ export class LitPlayer extends LitElement {
           </div>
           
           <div class="lit-player__controls">
-            <button class="lit-btn-control" @click=${() => this.isShuffle = !this.isShuffle} style="color: ${this.isShuffle ? 'var(--color-blue)' : ''}" title="Shuffle">
-              ${shuffleIcon}
-            </button>
-            <button class="lit-btn-control" @click=${() => this.isRepeat = !this.isRepeat} style="color: ${this.isRepeat ? 'var(--color-blue)' : ''}" title="Repeat One">
-              ${repeatIcon}
-            </button>
-            <button class="lit-btn-control lit-btn-control--mv ${this.isMVMode ? 'active' : ''}" @click=${() => this.isMVMode = !this.isMVMode} title="Toggle MV Mode">
+            <div class="lit-player__control-buttons">
+              <button class="lit-btn-control" @click=${() => this.isShuffle = !this.isShuffle} style="color: ${this.isShuffle ? 'var(--color-blue)' : ''}" title="Shuffle">
+                ${shuffleIcon}
+              </button>
+              <button class="lit-btn-control" @click=${this.handlePrev} ?disabled=${this.currentIndex === 0 && !this.isShuffle}>
+                ${backwardIcon}
+              </button>
+              <button class="lit-btn-control lit-btn-control--play" @click=${this.togglePlay} title=${this.isPlaying ? 'Pause' : 'Play'}>
+                ${this.isPlaying ? pauseIcon : playIcon}
+              </button>
+              <button class="lit-btn-control" @click=${this.handleNext} ?disabled=${this.currentIndex >= this.queue.length - 1 && !this.isRepeat && !this.isShuffle}>
+                ${forwardIcon}
+              </button>
+              <button class="lit-btn-control" @click=${() => this.isRepeat = !this.isRepeat} style="color: ${this.isRepeat ? 'var(--color-blue)' : ''}" title="Repeat One">
+                ${repeatIcon}
+              </button>
+            </div>
+            <div class="lit-player__progress-container">
+              <span class="time">${this.formatTime(this.currentTime)}</span>
+              <input
+                type="range"
+                class="progress-bar"
+                min="0"
+                max=${this.duration || 1}
+                .value=${this.currentTime}
+                @input=${this.handleSeek}
+                @mousedown=${this.handleSeekStart}
+                @mouseup=${this.handleSeekEnd}
+                @touchstart=${this.handleSeekStart}
+                @touchend=${this.handleSeekEnd}
+                style="background: linear-gradient(to right, var(--color-text-primary) ${this.duration ? (this.currentTime / this.duration) * 100 : 0}%, var(--color-border) ${this.duration ? (this.currentTime / this.duration) * 100 : 0}%);"
+              >
+              <span class="time">${this.formatTime(this.duration)}</span>
+            </div>
+          </div>
+          <div class="lit-player__volume">
+            <button class="lit-btn-control lit-btn-control--mv ${this.isMVMode ? 'active' : ''}" @click=${() => this.isMVMode = !this.isMVMode} title="Toggle MV Mode" style="width: 32px; height: 32px;">
               ${filmIcon}
             </button>
-            <button class="lit-btn-control" @click=${this.handlePrev} ?disabled=${this.currentIndex === 0 && !this.isShuffle}>
-              ${backwardIcon}
-            </button>
-            <button class="lit-btn-control lit-btn-control--play" @click=${this.togglePlay} style="color: var(--color-red)">
-              ${this.isPlaying ? pauseIcon : playIcon}
-            </button>
-            <button class="lit-btn-control" @click=${this.handleNext} ?disabled=${this.currentIndex >= this.queue.length - 1 && !this.isRepeat && !this.isShuffle}>
-              ${forwardIcon}
-            </button>
-            <div class="lit-player__volume">
+            <div style="display: flex; align-items: center; gap: 8px;">
               ${this.volume === 0 ? volumeXIcon : (this.volume < 50 ? volumeLowIcon : volumeHighIcon)}
               <input type="range" min="0" max="100" .value=${this.volume} @input=${this.handleVolumeChange}>
             </div>

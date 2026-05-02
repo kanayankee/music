@@ -47,7 +47,7 @@ function createSongField() {
     </div>
     <div class="field-row" style="display:flex; gap:1rem;">
       <div class="field" style="flex:1;">
-        <label>DAM カラオケ番号 <span class="optional">(任意)</span></label>
+        <label>DAM カラオケ番号 <span class="optional">(ない場合は空欄でOK)</span></label>
         <input type="text" class="s-damNum" placeholder="1234-56">
       </div>
       <div class="field" style="flex:1;">
@@ -57,7 +57,7 @@ function createSongField() {
     </div>
     <div class="field-row" style="display:flex; gap:1rem;">
       <div class="field" style="flex:1;">
-        <label>JOYSOUND カラオケ番号 <span class="optional">(任意)</span></label>
+        <label>JOYSOUND カラオケ番号 <span class="optional">(ない場合は空欄でOK)</span></label>
         <input type="text" class="s-joyNum" placeholder="123456">
       </div>
       <div class="field" style="flex:1;">
@@ -70,7 +70,7 @@ function createSongField() {
       <input type="url" class="s-lyricsUrl" placeholder="https://j-lyric.net/...">
     </div>
     <div class="field">
-      <label>その他の説明文 <span class="optional">(任意)</span></label>
+      <label>曲の概要 (Markdown可) <span class="optional">(任意)</span></label>
       <input type="text" class="s-songDesc" placeholder="映画「○○」主題歌">
     </div>
   `;
@@ -116,41 +116,41 @@ document.getElementById('post-form')?.addEventListener('submit', (e) => {
     const lyricsUrl = (wrapper.querySelector('.s-lyricsUrl') as HTMLInputElement).value;
     const extraDesc = (wrapper.querySelector('.s-songDesc') as HTMLInputElement).value;
 
-    let descriptionLines: string[] = [];
-    descriptionLines.push(extraDesc); // Top line (Extra desc or empty)
-    
-    // Karaoke line
-    let damStr = `[${damNum}](${damUrl || (damNum ? `https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=${damNum}` : '')})`;
-    let joyStr = `[${joyNum}](${joyUrl})`;
-    descriptionLines.push(`🎤[DAM] ${damStr} [JOYSOUND]${joyStr}`);
-
-    // YouTube line
     let ytBody = "";
     if (youtubeUrl) {
       const ytMatch = youtubeUrl.match(/(?:(?:youtu\.be\/)|(?:v=))([a-zA-Z0-9_-]{11})/);
       if (ytMatch) ytBody = `//youtu.be/${ytMatch[1]}`;
       else ytBody = youtubeUrl;
     }
-    if (ytBody) {
-      descriptionLines.push(`[YouTube](${ytBody})`);
-    }
 
-    // Lyrics line
+    let lyricDomain = "";
     if (lyricsUrl) {
-      let lyricDomain = "歌詞";
       try {
         const urlObj = new URL(lyricsUrl);
-        lyricDomain = `歌詞(${urlObj.hostname})`;
-      } catch(e) {}
-      descriptionLines.push(`[${lyricDomain}](${lyricsUrl})`);
+        lyricDomain = urlObj.hostname;
+      } catch(e) {
+        lyricDomain = "歌詞サイト";
+      }
     }
 
-    return {
+    const songObj: any = {
       title: title,
       author: author,
-      description: descriptionLines.join('\\n'),
-      spotify: spotifyUrl
+      description: extraDesc,
+      spotify: spotifyUrl || undefined,
+      damNumber: damNum || "",
+      damUrl: damUrl || "",
+      joyNumber: joyNum || "",
+      joyUrl: joyUrl || "",
+      lyricsSiteName: lyricDomain || undefined,
+      lyricsUrl: lyricsUrl || undefined,
+      youtubeUrl: ytBody || undefined
     };
+
+    // Clean up undefined properties to make JSON output cleaner
+    Object.keys(songObj).forEach(key => songObj[key] === undefined && delete songObj[key]);
+
+    return songObj;
   });
 
   eventPayload.songs = generatedSongs;

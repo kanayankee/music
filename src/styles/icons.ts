@@ -8,7 +8,7 @@ export const spotifyIcon = html`
 
 export const playIcon = html`
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+    <path d="M8 5v14l11-7z"/>
   </svg>
 `;
 
@@ -107,5 +107,12 @@ export const arrowUpIcon = html`
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <line x1="12" y1="19" x2="12" y2="5"></line>
     <polyline points="5 12 12 5 19 12"></polyline>
+  </svg>
+`;
+
+export const arrowDownIcon = html`
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19"></line>
+    <polyline points="19 12 12 19 5 12"></polyline>
   </svg>
 `;

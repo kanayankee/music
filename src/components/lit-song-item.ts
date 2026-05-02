@@ -120,14 +120,27 @@ export class LitSongItem extends LitElement {
     }));
   }
 
+  private handleLinkClick(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+    const anchor = target.closest('a');
+    if (anchor) {
+      e.stopPropagation();
+      const href = anchor.getAttribute('href');
+      if (href && href.toLowerCase().endsWith('.md')) {
+        e.preventDefault();
+        this.dispatchEvent(new CustomEvent('open-markdown', {
+          detail: { url: href },
+          bubbles: true,
+          composed: true
+        }));
+      }
+    }
+  }
+
   render() {
     const description = this.song.description || '';
-    // Parse youtube ID from canonical [YouTube](//youtu.be/xxx) line
-    const ytMatch = description.match(/^\s*\[YouTube\]\((\/\/youtu\.be\/([\w-]+))\)\s*$/m);
-    const youtubeId = ytMatch ? ytMatch[2] : null;
-    
-    // Strip youtube text from description
-    const cleanDesc = description.replace(/^\s*\[YouTube\]\((\/\/youtu\.be\/([\w-]+))\)\s*$/mg, "");
+    const ytMatch = this.song.youtubeUrl?.match(/(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+    const youtubeId = ytMatch ? ytMatch[1] : null;
 
     return html`
       <div class="lit-song ${youtubeId ? 'lit-song--playable' : ''}" @click=${youtubeId ? this.handlePlay : null}>
@@ -149,7 +162,26 @@ export class LitSongItem extends LitElement {
             ` : ''}
           </div>
         </div>
-        <div class="lit-song__desc" .innerHTML=${marked.parse(cleanDesc, { breaks: true })}></div>
+        <div class="lit-song__desc" @click=${this.handleLinkClick}>
+          ${description ? html`<div .innerHTML=${marked.parse(description, { breaks: true })}></div>` : ''}
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; font-size: 0.8rem; color: var(--color-text-secondary);">
+              <div>
+                🎤 
+                [DAM] ${this.song.damNumber ? (this.song.damUrl ? html`<a href="${this.song.damUrl}" target="_blank" rel="noopener">${this.song.damNumber}</a>` : this.song.damNumber) : '404 NotFound'}
+                [JOYSOUND] ${this.song.joyNumber ? (this.song.joyUrl ? html`<a href="${this.song.joyUrl}" target="_blank" rel="noopener">${this.song.joyNumber}</a>` : this.song.joyNumber) : '404 NotFound'}
+              </div>
+            ${this.song.lyricsUrl ? html`
+              <div>
+                [歌詞] <a href="${this.song.lyricsUrl}" target="_blank" rel="noopener">${this.song.lyricsSiteName || '歌詞サイト'}</a>
+              </div>
+            ` : ''}
+            ${this.song.youtubeUrl && !youtubeId ? html`
+              <div>
+                [動画] <a href="${this.song.youtubeUrl}" target="_blank" rel="noopener">YouTube</a>
+              </div>
+            ` : ''}
+          </div>
+        </div>
       </div>
     `;
   }

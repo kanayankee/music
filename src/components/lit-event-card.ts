@@ -29,8 +29,8 @@ export class LitEventCard extends LitElement {
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 0 2rem;
+      justify-content: flex-end;
+      padding: 2rem;
       width: 100%;
       box-sizing: border-box;
     }
