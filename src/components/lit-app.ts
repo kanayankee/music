@@ -142,16 +142,16 @@ export class LitMusicApp extends LitElement {
     }
 
     :host(.mv-active) .lit-header {
-      width: 100%;
-      padding-right: 50%;
+      width: 50%;
+      padding-right: 1rem;
       box-sizing: border-box;
     }
 
     :host(.mv-active) .lit-main {
       max-width: none;
       margin: 0;
-      width: 100%;
-      padding-right: 50%;
+      width: 50%;
+      padding-right: 1rem;
       box-sizing: border-box;
     }
 
@@ -453,7 +453,7 @@ export class LitMusicApp extends LitElement {
       top: 50%;
       transform: translateY(-50%);
       right: 1em;
-      z-index: 90;
+      z-index: 110;
       padding: 0;
       margin: 0;
       list-style: none;
