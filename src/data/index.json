@@ -47,6 +47,8 @@
             "damUrl": "",
             "joyNumber": "",
             "joyUrl": "",
+            "lyricsSiteName": "",
+            "lyricsUrl": "",
             "youtubeUrl": "//youtu.be/RbpDRk_OAPU"
           }
         ]
@@ -346,7 +348,7 @@
           {
             "title": "あたりまえ体操",
             "author": "COWCOW",
-            "description": "注意点体操\n[注意点体操歌詞](注意点/注意点体操2015Xmas.md)",
+            "description": "注意点体操\n[注意点体操歌詞](original-lyrics/注意点体操2015Xmas.md)",
             "spotify": "https://open.spotify.com/track/5oHSEsaU6eXaeBeYfzwa0o",
             "damNumber": "6857-88",
             "damUrl": "https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=6857-88",
@@ -392,7 +394,7 @@
           {
             "title": "あたりまえ体操",
             "author": "COWCOW",
-            "description": "注意点体操\n[注意点体操歌詞](注意点/注意点体操2015Summer.md)",
+            "description": "注意点体操\n[注意点体操歌詞](original-lyrics/注意点体操2015Summer.md)",
             "spotify": "https://open.spotify.com/track/5oHSEsaU6eXaeBeYfzwa0o",
             "damNumber": "6857-88",
             "damUrl": "https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=6857-88",
@@ -457,6 +459,8 @@
             "damUrl": "",
             "joyNumber": "",
             "joyUrl": "",
+            "lyricsSiteName": "",
+            "lyricsUrl": "",
             "youtubeUrl": "//youtu.be/5FOBkm0ibWI"
           },
           {
@@ -523,7 +527,7 @@
           {
             "title": "PPAP(ペンパイナッポーアッポーペン)",
             "author": "ピコ太郎",
-            "description": "注意点太郎 元曲\n[注意点太郎歌詞](注意点/注意点太郎2016Xmas.md)",
+            "description": "注意点太郎 元曲\n[注意点太郎歌詞](original-lyrics/注意点太郎2016Xmas.md)",
             "spotify": "https://open.spotify.com/track/1ORkFlSSZwpReXTUXfMI0i",
             "damNumber": "6018-17",
             "damUrl": "https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=6018-17",
@@ -595,7 +599,7 @@
           {
             "title": "MUSIC VIDEO",
             "author": "岡崎体育",
-            "description": "注意点 VIDEO 元曲\n[注意点VIDEO歌詞](注意点/注意点VIDEO2016Summer.md)",
+            "description": "注意点 VIDEO 元曲\n[注意点VIDEO歌詞](original-lyrics/注意点VIDEO2016Summer.md)",
             "spotify": "https://open.spotify.com/track/1qK7Y8HxbRFNzSIh3NRZIQ",
             "damNumber": "6001-91",
             "damUrl": "https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=6001-91",
@@ -654,7 +658,7 @@
           {
             "title": "PERFECT HUMAN",
             "author": "RADIOFISH",
-            "description": "注意点HUMAN\n[注意点HUMAN歌詞](注意点/注意点HUMAN2016Spring.md)",
+            "description": "注意点HUMAN\n[注意点HUMAN歌詞](original-lyrics/注意点HUMAN2016Spring.md)",
             "spotify": "https://open.spotify.com/track/2Mm0S1T5lgPy0YTXUxeIJQ",
             "damNumber": "5994-97",
             "damUrl": "https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=5994-97",
@@ -867,12 +871,14 @@
           {
             "title": "キャリア・ウーマン",
             "author": "ブルゾンちえみ",
-            "description": "注意点ヒューマン元ネタ\n[注意点ヒューマン歌詞](注意点/注意点ヒューマン2017Spring.md)",
+            "description": "注意点ヒューマン元ネタ\n[注意点ヒューマン歌詞](original-lyrics/注意点ヒューマン2017Spring.md)",
             "spotify": "",
             "damNumber": "5069-97",
             "damUrl": "https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=5069-97",
             "joyNumber": "696618",
             "joyUrl": "https://www.joysound.com/web/search/song/632964",
+            "lyricsSiteName": "",
+            "lyricsUrl": "",
             "youtubeUrl": "//youtu.be/Y0JbtAJ8Hgo"
           },
           {
@@ -1219,6 +1225,8 @@
             "damUrl": "",
             "joyNumber": "",
             "joyUrl": "",
+            "lyricsSiteName": "",
+            "lyricsUrl": "",
             "youtubeUrl": "//youtu.be/yir2I0X6siA"
           }
         ]
@@ -2118,6 +2126,8 @@
             "damUrl": "",
             "joyNumber": "23551",
             "joyUrl": "https://www.joysound.com/web/search/song/22777",
+            "lyricsSiteName": "",
+            "lyricsUrl": "",
             "youtubeUrl": "//youtu.be/hsSAnsrQvLk"
           }
         ]
@@ -2419,6 +2429,7 @@
             "title": "Letters to me",
             "author": "天月 -あまつき-",
             "description": "",
+            "spotify": "",
             "damNumber": "6836-77",
             "damUrl": "https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=6836-77",
             "joyNumber": "486062",
@@ -2551,12 +2562,16 @@
           },
           {
             "title": "OURBLUE",
-            "author": "漣音",
+            "author": "漣音 feat.YiXi",
             "description": "運営メンバーのオリジナル曲",
+            "spotify": "",
             "damNumber": "",
             "damUrl": "",
             "joyNumber": "",
-            "joyUrl": ""
+            "joyUrl": "",
+            "lyricsSiteName": "Life is Tech ! Music",
+            "lyricsUrl": "original-lyrics/OURBLUE.md",
+            "youtubeUrl": ""
           }
         ]
       }
