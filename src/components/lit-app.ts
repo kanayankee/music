@@ -49,7 +49,7 @@ export class LitMusicApp extends LitElement {
   private isLoaded: boolean = false;
 
   @state()
-  private splashActive: boolean = true;
+  private splashActive: boolean = window.innerWidth > 768;
 
   @state()
   private loadingWord: string = '';
@@ -135,7 +135,7 @@ export class LitMusicApp extends LitElement {
 
     setTimeout(() => {
       const mark = this.shadowRoot?.querySelector('#mark') as HTMLElement;
-      if (mark) {
+      if (mark && !this.isMobile) {
         const markRect = mark.getBoundingClientRect();
         mark.style.transform = `translateX(${window.innerWidth / 2 - markRect.left}px) translateX(-50%)`;
       }
@@ -143,7 +143,7 @@ export class LitMusicApp extends LitElement {
       setTimeout(() => {
         this.isLoaded = true;
         setTimeout(() => {
-          if (mark) {
+          if (mark && !this.isMobile) {
             mark.style.transition = 'transform 1s cubic-bezier(0.2, 0.8, 0.2, 1)';
             mark.style.transform = 'none';
           }

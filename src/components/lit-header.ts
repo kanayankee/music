@@ -9,7 +9,7 @@ export class LitHeader extends LitElement {
   @property({ type: String })
   activeTab = 'camp';
 
-  @property({ type: Boolean })
+  @property({ type: Boolean, reflect: true, attribute: 'mobile' })
   isMobile = false;
 
   @property({ type: Boolean })
@@ -53,6 +53,11 @@ export class LitHeader extends LitElement {
         width: 100%;
         padding-right: 0;
       }
+    }
+
+    :host([mobile]) .lit-header__inner {
+      justify-content: center;
+      padding-top: 0;
     }
 
     .lit-header__inner {
@@ -186,11 +191,34 @@ export class LitHeader extends LitElement {
     }
 
     @media (max-width: 768px) {
-      .lit-header__logos {
-        height: min(40px, 9vw);
+      :host([mobile]) .lit-header__logos {
+        height: 56px;
+        max-width: 84vw;
+        transform: scale(0.72);
+        margin-bottom: 0.35rem;
       }
-      .lit-scroll-down {
-        bottom: 2.75rem;
+
+      :host([mobile]) .lit-header__logos img {
+        height: 100%;
+      }
+
+      :host([mobile]) .lit-header__logos.splash-active #mark,
+      :host([mobile]) .lit-header__logos.splash-active #logo,
+      :host([mobile]) .lit-header__logos.splash-active #music {
+        /* Allow default splash animation (opacity and translateX) to work on mobile */
+      }
+
+      :host([mobile]) .lit-scroll-down {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 2.5rem;
+        display: inline-flex;
+      }
+
+      :host([mobile]) .lit-scroll-down--hidden {
+        display: none;
       }
     }
   `;
@@ -245,7 +273,7 @@ export class LitHeader extends LitElement {
             @click=${() => this.dispatchEvent(new CustomEvent('scroll-click'))}
             aria-label="Scroll down"
           >
-            <span>School Down</span>
+            <span>Scroll Down</span>
             <span class="lit-scroll-down__chevron" aria-hidden="true">
               <span class="lit-scroll-down__chevron-line"></span>
               <span class="lit-scroll-down__chevron-line"></span>
