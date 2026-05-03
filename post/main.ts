@@ -134,21 +134,18 @@ document.getElementById('post-form')?.addEventListener('submit', (e) => {
     }
 
     const songObj: any = {
-      title: title,
-      author: author,
-      description: extraDesc,
-      spotify: spotifyUrl || undefined,
+      title: title || '',
+      author: author || '',
+      description: extraDesc || '',
+      spotify: spotifyUrl || '',
       damNumber: damNum || '',
       damUrl: damUrl || '',
       joyNumber: joyNum || '',
       joyUrl: joyUrl || '',
-      lyricsSiteName: lyricDomain || undefined,
-      lyricsUrl: lyricsUrl || undefined,
-      youtubeUrl: ytBody || undefined,
+      lyricsSiteName: lyricDomain || '',
+      lyricsUrl: lyricsUrl || '',
+      youtubeUrl: ytBody || '',
     };
-
-    // Clean up undefined properties to make JSON output cleaner
-    Object.keys(songObj).forEach((key) => songObj[key] === undefined && delete songObj[key]);
 
     return songObj;
   });
@@ -157,7 +154,7 @@ document.getElementById('post-form')?.addEventListener('submit', (e) => {
 
   const jsonStr = JSON.stringify(eventPayload, null, 2);
 
-  const body = `以下のイベント/曲の追加をお願いします。
+  const body = `${targetIssueTitle}
 
 \`\`\`json
 ${jsonStr}
