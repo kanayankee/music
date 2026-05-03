@@ -381,7 +381,9 @@ export class LitMusicApp extends LitElement {
   async updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('currentSongIndex')) {
       await this.updateComplete;
-      this.scrollToCurrentSong();
+      if (!this.isMobile) {
+        this.scrollToCurrentSong();
+      }
     }
   }
 
