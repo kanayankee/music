@@ -57,7 +57,7 @@ export class LitMusicApp extends LitElement {
 
   @state()
   private markdownModalContent = '';
-  
+
   @state()
   private markdownModalTitle = '';
 
@@ -69,6 +69,12 @@ export class LitMusicApp extends LitElement {
 
   @state()
   private navigationTop: number = 0;
+
+  @state()
+  private introProgress: number = 0;
+
+  @state()
+  private isAtPageTop: boolean = true;
 
   constructor() {
     super();
@@ -97,16 +103,32 @@ export class LitMusicApp extends LitElement {
 
   private handleResize = () => {
     this.syncResponsiveMode();
+    this.updateIntroProgress();
     this.updateNavigationTop();
   }
 
+  private handleScroll = () => {
+    this.updateIntroProgress();
+  }
+
+  private updateIntroProgress() {
+    const progress = Math.min(window.scrollY / window.innerHeight, 1);
+    if (progress !== this.introProgress) {
+      this.introProgress = progress;
+    }
+
+    const atTop = window.scrollY <= 1;
+    if (atTop !== this.isAtPageTop) {
+      this.isAtPageTop = atTop;
+    }
+  }
+
   private updateNavigationTop() {
-    const header = this.shadowRoot?.querySelector('.lit-header') as HTMLElement | null;
-    if (!header) return;
-    this.navigationTop = Math.ceil(header.getBoundingClientRect().height + 72);
+    this.navigationTop = 184;
   }
 
   firstUpdated() {
+    this.updateIntroProgress();
     this.updateNavigationTop();
 
     setTimeout(() => {
@@ -248,13 +270,29 @@ export class LitMusicApp extends LitElement {
     .lit-header {
       background: var(--color-surface);
       box-shadow: var(--shadow-sm);
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 100;
+      height: calc((1 - var(--intro-progress, 0)) * 100vh + var(--intro-progress, 0) * 128px);
+      transition: box-shadow var(--transition-fast);
+    }
+
+    .lit-header__inner {
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1rem;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lit-intro-spacer {
+      width: 100%;
+      height: 100vh;
     }
 
     .lit-header__logos {
@@ -262,7 +300,59 @@ export class LitMusicApp extends LitElement {
       align-items: center;
       gap: 0;
       padding: 0;
-      height: 40px;
+      height: 56px;
+      transform: scale(calc(1 - (var(--intro-progress, 0) * 0.28)));
+      transform-origin: center;
+      margin-bottom: calc((1 - var(--intro-progress, 0)) * 1.5rem + var(--intro-progress, 0) * 0.35rem);
+    }
+
+    .lit-scroll-down {
+      position: absolute;
+      bottom: 150px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      padding: 0.2rem 0.4rem;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.1rem;
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      line-height: 1;
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+      opacity: 0.62;
+    }
+
+    .lit-scroll-down:hover {
+      transform: translateX(-50%) translateY(-1px);
+      opacity: calc((1 - var(--intro-progress, 0)) * 0.82);
+    }
+
+    .lit-scroll-down__chevron {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      margin-top: 1px;
+    }
+
+    .lit-scroll-down__chevron-line {
+      width: 6px;
+      height: 6px;
+      border-right: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      transform: rotate(45deg);
+    }
+
+    .lit-scroll-down--hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%);
     }
 
     .lit-header__logos img {
@@ -324,10 +414,15 @@ export class LitMusicApp extends LitElement {
     .lit-tabs {
       display: flex;
       gap: 8px;
-      margin-top: 1rem;
       background: #f1f5f9;
       padding: 4px;
       border-radius: var(--radius-full);
+    }
+
+    @media (max-width: 768px) {
+      .lit-scroll-down {
+        bottom: 2.75rem;
+      }
     }
 
     .lit-tabs__button {
@@ -355,7 +450,7 @@ export class LitMusicApp extends LitElement {
     .lit-main {
       max-width: 800px;
       margin: 0 auto;
-      padding: 2rem 1rem;
+      padding: 128px 1rem 2rem;
     }
 
     .lit-controls {
@@ -463,54 +558,119 @@ export class LitMusicApp extends LitElement {
     .nav-year {
       cursor: pointer;
       position: relative;
-      line-height: 1.5;
-      transition: 0.4s;
-      height: 1.5em;
       margin: 0.5em 0;
-      border-radius: 1em;
-      color: #fff;
-      border: solid 2px;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .nav-year > a {
-      color: inherit;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      padding: 0 0.5em;
-      white-space: nowrap;
-    }
-
-    .nav-year > a .label {
-      display: none;
-    }
-    
-    .nav-year:hover > a .label {
-      display: inline;
-    }
-
-    .nav-year > a .short-label {
-      display: inline;
-    }
-
-    .nav-year:hover > a .short-label {
-      display: none;
+      display: grid;
+      grid-template-columns: min-content;
+      grid-template-rows: 2em;
+      z-index: 1;
     }
 
     .nav-year:hover {
-      background: #fff !important;
+      z-index: 10;
     }
 
-    .nav-year:hover > a {
-      color: inherit !important;
+    .nav-year > a.year-main-link {
+      grid-column: 1;
+      grid-row: 1;
+      background: var(--theme-color);
+      border: solid 2px var(--theme-color);
+      color: #fff;
+      border-radius: 2em;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      height: 2em;
+      min-width: 2em;
+      box-sizing: border-box;
+      transition: background 0.4s, color 0.4s, border-radius 0.4s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .nav-year > a.year-main-link .label {
+      display: none;
+      padding: 0.5em;
+      flex: 1;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .nav-year > a.year-main-link .short-label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    .nav-year:hover > a.year-main-link {
+      background: #fff;
+      color: var(--theme-color);
+      border-radius: 2em 2em 2em 0;
+    }
+
+    .nav-year.no-panel:hover > a.year-main-link {
+      border-radius: 2em;
+    }
+
+    .nav-year:hover > a.year-main-link .label {
+      display: block;
+    }
+
+    .nav-year:hover > a.year-main-link .short-label {
+      display: none;
+    }
+
+    .nav-year .sub-nav-panel {
+      grid-column: 1;
+      grid-row: 1;
+      align-self: start;
+      justify-self: stretch;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      max-width: 0;
+      max-height: 0;
+      opacity: 0;
+      background: var(--theme-color);
+      border-radius: 0 0 0.5em 0.5em;
+      margin-right: 2em;
+      margin-top: calc(2em - 2px);
+      transition: max-width 0.4s ease, max-height 0.4s ease, opacity 0.3s ease, margin-right 0.4s ease;
+      white-space: nowrap;
+      z-index: 1;
+    }
+
+    .nav-year:hover .sub-nav-panel {
+      max-width: 500px;
+      max-height: 500px;
+      opacity: 1;
+      margin-right: 2.8em;
+    }
+
+    .nav-year .sub-nav-panel a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85em;
+      font-weight: 500;
+      padding: 0.4em 1em;
+      transition: background 0.2s;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+      text-align: left;
+    }
+
+    .nav-year .sub-nav-panel a:last-child {
+      border-bottom: none;
+    }
+
+    .nav-year .sub-nav-panel a:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
   `;
 
   private setTab(tab: 'camp' | 'school' | 'event') {
     this.activeTab = tab;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.scrollToContentStart();
   }
 
   private handlePlayRandom() {
@@ -529,7 +689,7 @@ export class LitMusicApp extends LitElement {
       this.currentSongIndex = 0;
       this.playerQueueTab = this.activeTab;
       this.currentEventName = this.playerQueue[0]?.eventName || '';
-      
+
       const player = this.shadowRoot?.querySelector('lit-player') as any;
       if (!this.isMobile && player && typeof player.playSongImmediately === 'function') {
         player.playSongImmediately(this.playerQueue, this.currentSongIndex);
@@ -552,10 +712,10 @@ export class LitMusicApp extends LitElement {
 
     const currentSong = this.playerQueue[this.currentSongIndex] as any;
     if (!currentSong || !currentSong.eventName) return;
-    
+
     const el = this.shadowRoot?.querySelector(`[data-event="${currentSong.eventName}"]`);
     if (el) {
-       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
 
@@ -597,7 +757,7 @@ export class LitMusicApp extends LitElement {
     this.currentSongIndex = fullQueue.findIndex(s => s.title === e.detail.song.title && s.eventName === e.detail.eventName);
     if (this.currentSongIndex === -1) this.currentSongIndex = 0;
     this.currentEventName = e.detail.eventName;
-    
+
     const player = this.shadowRoot?.querySelector('lit-player') as any;
     if (!this.isMobile && player && typeof player.playSongImmediately === 'function') {
       player.playSongImmediately(this.playerQueue, this.currentSongIndex);
@@ -608,18 +768,33 @@ export class LitMusicApp extends LitElement {
     e.preventDefault();
     const el = this.shadowRoot?.querySelector('#' + id);
     if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - 100;
+      const header = this.shadowRoot?.querySelector('.lit-header') as HTMLElement | null;
+      const headerHeight = header ? Math.ceil(header.getBoundingClientRect().height) : 128;
+      const safeMargin = 24;
+      const top = el.getBoundingClientRect().top + window.scrollY - headerHeight - safeMargin;
       window.scrollTo({ top, behavior: 'smooth' });
     }
   }
 
-  private async handleOpenMarkdown(e: CustomEvent<{url: string}>) {
+  private scrollToEvent(e: Event, eventName: string) {
+    e.preventDefault();
+    const el = this.shadowRoot?.querySelector(`[data-event="${eventName}"]`);
+    if (el) {
+      const header = this.shadowRoot?.querySelector('.lit-header') as HTMLElement | null;
+      const headerHeight = header ? Math.ceil(header.getBoundingClientRect().height) : 128;
+      const safeMargin = 24;
+      const top = el.getBoundingClientRect().top + window.scrollY - headerHeight - safeMargin;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  }
+
+  private async handleOpenMarkdown(e: CustomEvent<{ url: string }>) {
     const url = e.detail.url;
     const filename = url.split('/').pop() || 'Markdown';
     this.markdownModalTitle = decodeURIComponent(filename.replace(/\.md$/i, ''));
     this.isMarkdownModalOpen = true;
     this.markdownModalContent = '<p>Loading...</p>';
-    
+
     try {
       // relative URL fetching
       const res = await fetch(url);
@@ -635,16 +810,68 @@ export class LitMusicApp extends LitElement {
     this.isMarkdownModalOpen = false;
   }
 
+  private scrollToContentStart() {
+    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+  }
+
+  private renderLogoGroup(animated = false) {
+    const base = import.meta.env.BASE_URL;
+    if (animated) {
+      return html`
+        <div class="lit-header__logos ${this.splashActive ? 'splash-active' : ''}">
+          <img src="${base}res/img/mark.svg" alt="Mark" id="mark">
+          <img src="${base}res/img/logo.svg" alt="Life is Tech!" id="logo">
+          <img src="${base}res/img/music.svg" alt="music" id="music">
+        </div>
+      `;
+    }
+
+    return html`
+      <div class="lit-header__logos">
+        <img src="${base}res/img/mark.svg" alt="Mark">
+        <img src="${base}res/img/logo.svg" alt="Life is Tech!">
+        <img src="${base}res/img/music.svg" alt="music">
+      </div>
+    `;
+  }
+
+  private renderTabButtons() {
+    return html`
+      <div class="lit-tabs">
+        <button 
+          class="lit-tabs__button ${this.activeTab === 'camp' ? 'lit-tabs__button--active' : ''}"
+          @click=${() => this.setTab('camp')}
+        >
+          Camp
+        </button>
+        <button 
+          class="lit-tabs__button ${this.activeTab === 'school' ? 'lit-tabs__button--active' : ''}"
+          @click=${() => this.setTab('school')}
+        >
+          School
+        </button>
+        <button 
+          class="lit-tabs__button ${this.activeTab === 'event' ? 'lit-tabs__button--active' : ''}"
+          @click=${() => this.setTab('event')}
+        >
+          Event
+        </button>
+      </div>
+    `;
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.syncResponsiveMode();
     this.addEventListener('video-position-changed', this.handleVideoPositionChanged as EventListener);
+    window.addEventListener('scroll', this.handleScroll, { passive: true });
     window.addEventListener('resize', this.handleResize);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('video-position-changed', this.handleVideoPositionChanged as EventListener);
+    window.removeEventListener('scroll', this.handleScroll);
     window.removeEventListener('resize', this.handleResize);
   }
 
@@ -666,6 +893,9 @@ export class LitMusicApp extends LitElement {
         return parseInt(yearB) - parseInt(yearA);
       });
 
+    const isScrollDownVisible = this.isAtPageTop;
+    const isSideNavVisible = this.introProgress > 0.92;
+
     const base = import.meta.env.BASE_URL;
     return html`
       <div id="loading" class="${this.isLoaded ? 'loaded' : ''}">
@@ -673,57 +903,62 @@ export class LitMusicApp extends LitElement {
         <img src="${base}res/img/loading.svg" alt="Loading">
       </div>
 
-      <header class="lit-header">
-        <div class="lit-header__logos ${this.splashActive ? 'splash-active' : ''}">
-          <img src="${base}res/img/mark.svg" alt="Mark" id="mark">
-          <img src="${base}res/img/logo.svg" alt="Life is Tech!" id="logo">
-          <img src="${base}res/img/music.svg" alt="music" id="music">
-        </div>
-        <div class="lit-tabs">
-          <button 
-            class="lit-tabs__button ${this.activeTab === 'camp' ? 'lit-tabs__button--active' : ''}"
-            @click=${() => this.setTab('camp')}
-          >
-            Camp
-          </button>
-          <button 
-            class="lit-tabs__button ${this.activeTab === 'school' ? 'lit-tabs__button--active' : ''}"
-            @click=${() => this.setTab('school')}
-          >
-            School
-          </button>
-          <button 
-            class="lit-tabs__button ${this.activeTab === 'event' ? 'lit-tabs__button--active' : ''}"
-            @click=${() => this.setTab('event')}
-          >
-            Event
+      <header class="lit-header" style="--intro-progress: ${this.introProgress};">
+        <div class="lit-header__inner">
+          ${this.renderLogoGroup(true)}
+          ${this.renderTabButtons()}
+          <button class="lit-scroll-down ${isScrollDownVisible ? '' : 'lit-scroll-down--hidden'}" @click=${this.scrollToContentStart} aria-label="Scroll down">
+            <span>School Down</span>
+            <span class="lit-scroll-down__chevron" aria-hidden="true">
+              <span class="lit-scroll-down__chevron-line"></span>
+              <span class="lit-scroll-down__chevron-line"></span>
+            </span>
           </button>
         </div>
       </header>
 
+      <div class="lit-intro-spacer"></div>
+
       ${!this.isMobile ? html`
-      <ul id="navigations" style="${this.navigationTop ? `--nav-top: ${this.navigationTop}px;` : ''}">
-        <li class="nav-year" style="border-color: #333; color: #333; background: #333;">
-          <a href="#" style="color: #fff;" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+      <ul id="navigations" style="${this.navigationTop ? `--nav-top: ${this.navigationTop}px;` : ''} opacity: ${isSideNavVisible ? 1 : 0}; pointer-events: ${isSideNavVisible ? 'auto' : 'none'}; transition: opacity var(--transition-fast);">
+        <li class="nav-year no-panel" style="--theme-color: #333;">
+          <a class="year-main-link" href="#" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
             <span class="label">TOP</span>
             <span class="short-label">${arrowUpIcon}</span>
           </a>
         </li>
         ${sortedYears.map(([year, _events], index) => {
       const color = COLORS[index % COLORS.length];
+      const sortedEvents = [..._events].sort((a, b) => {
+        const getSeasonRank = (name: string) => {
+          if (name.includes('Winter')) return 4;
+          if (name.includes('Autumn')) return 3;
+          if (name.includes('Summer')) return 2;
+          if (name.includes('Spring')) return 1;
+          return 0;
+        };
+        return getSeasonRank(b.name) - getSeasonRank(a.name);
+      });
       return html`
-            <li class="nav-year" style="background: ${color}; border-color: ${color}; color: ${color};">
-              <a href="#" style="color: #fff;" @click=${(e: Event) => { this.scrollToId(e, createId('year-' + year)); }}>
+            <li class="nav-year" style="--theme-color: ${color};">
+              <a class="year-main-link" href="#" @click=${(e: Event) => { this.scrollToId(e, createId('year-' + year)); }}>
                 <span class="label">${year}</span>
                 <span class="short-label">${isNaN(Number(year)) ? starIcon : year.slice(-2)}</span>
               </a>
+              <div class="sub-nav-panel">
+                ${sortedEvents.map(ev => html`
+                  <a href="#" @click=${(e: Event) => { e.preventDefault(); e.stopPropagation(); this.scrollToEvent(e, ev.name); }}>
+                    ${ev.name}
+                  </a>
+                `)}
+              </div>
             </li>
           `;
     })}
-        <li class="nav-year" style="border-color: #333; color: #333; background: #333;">
-          <a href="#" style="color: #fff;" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }}>
-            <span class="label">BOTTOM</span>
-            <span class="short-label">${arrowDownIcon}</span>
+        <li class="nav-year no-panel" style="--theme-color: #333;">
+          <a class="year-main-link" href="#" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }}>
+            <span class="label">Thanks!</span>
+            <span class="short-label">!</span>
           </a>
         </li>
       </ul>
@@ -731,18 +966,18 @@ export class LitMusicApp extends LitElement {
 
       <main class="lit-main" @open-markdown=${this.handleOpenMarkdown}>
         ${sortedYears.map(([year, events]) => {
-          const sortedEvents = [...events].sort((a, b) => {
-            const getSeasonRank = (name: string) => {
-              if (name.includes('Winter')) return 4;
-              if (name.includes('Autumn')) return 3;
-              if (name.includes('Summer')) return 2;
-              if (name.includes('Spring')) return 1;
-              return 0;
-            };
-            return getSeasonRank(b.name) - getSeasonRank(a.name);
-          });
+      const sortedEvents = [...events].sort((a, b) => {
+        const getSeasonRank = (name: string) => {
+          if (name.includes('Winter')) return 4;
+          if (name.includes('Autumn')) return 3;
+          if (name.includes('Summer')) return 2;
+          if (name.includes('Spring')) return 1;
+          return 0;
+        };
+        return getSeasonRank(b.name) - getSeasonRank(a.name);
+      });
 
-          return html`
+      return html`
             <h2 id="${createId('year-' + year)}" style="text-align:center; font-size: 2rem; margin: 3rem 0 1rem; color: var(--color-blue);">${year}</h2>
             ${sortedEvents.map(ev => html`
               <div data-event="${ev.name}">
@@ -756,7 +991,7 @@ export class LitMusicApp extends LitElement {
               </div>
             `)}
           `;
-        })}
+    })}
       </main>
 
       ${this.isMarkdownModalOpen ? html`
@@ -802,7 +1037,7 @@ export class LitMusicApp extends LitElement {
         .currentIndex=${this.currentSongIndex}
         .eventName=${this.currentEventName}
         @index-changed=${(e: CustomEvent<{ index: number }>) => { this.currentSongIndex = e.detail.index; }}
-        @mv-mode-changed=${(e: CustomEvent<{ active: boolean }>) => { 
+        @mv-mode-changed=${(e: CustomEvent<{ active: boolean }>) => {
           this.isMVMode = e.detail.active;
           if (this.isMVMode) {
             this.classList.add('mv-active');
