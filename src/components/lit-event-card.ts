@@ -98,6 +98,15 @@ export class LitEventCard extends LitElement {
         padding: 1.5rem 0;
       }
     }
+    @media (max-width: 768px) {
+      lit-song-item {
+        display: block;
+        padding: 0; /* let inner component control its vertical spacing */
+      }
+      lit-song-item:not(:last-child) {
+        border-bottom: 1px solid var(--color-border);
+      }
+    }
   `;
 
   render() {
@@ -133,6 +142,7 @@ export class LitEventCard extends LitElement {
               <lit-song-item
                 .song=${song}
                 .isMobile=${this.isMobile}
+                ?mobile=${this.isMobile}
                 ?is-playing=${this.playingSongTitle === song.title &&
                 this.playingEventName === this.event.name}
                 @play-song=${(e: CustomEvent) => this.handlePlaySongInEvent(e, song)}

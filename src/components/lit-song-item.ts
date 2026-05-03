@@ -93,6 +93,8 @@ export class LitSongItem extends LitElement {
       color: var(--color-red);
     }
 
+    /* No mobile-specific play-button overrides — use base .lit-btn-action styles */
+
     .lit-btn-action--spotify {
       color: #1ed760;
       text-decoration: none;
@@ -153,6 +155,33 @@ export class LitSongItem extends LitElement {
       .lit-song__title-row {
         width: 100%;
       }
+    }
+    :host([mobile]) .lit-song {
+      border: none;
+      background: transparent;
+      border-radius: 0;
+      padding: 0.75rem 0;
+      box-shadow: none;
+    }
+
+    :host([mobile]) .lit-song:hover {
+      background: transparent;
+      box-shadow: none;
+      border-color: var(--color-border);
+    }
+
+    /* Mobile: enclose play button in a circular border */
+    :host([mobile]) .lit-btn-action--play {
+      border-radius: 50%;
+      border: 1px solid var(--color-text-secondary);
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      background: transparent;
+      color: var(--color-text-secondary);
     }
   `;
 
@@ -239,7 +268,7 @@ export class LitSongItem extends LitElement {
     return html`
       <div
         class="lit-song ${youtubeId ? 'lit-song--playable' : ''}"
-        @click=${youtubeId ? this.handlePlay : null}
+        @click=${youtubeId && !this.isMobile ? this.handlePlay : null}
       >
         <div class="lit-song__header">
           <div class="lit-song__title-wrap">
@@ -285,9 +314,16 @@ export class LitSongItem extends LitElement {
           <div class="lit-song__actions">
             ${youtubeId && !showInlinePlayer
               ? html`
-                  <div class="lit-btn-action lit-btn-action--play" title="Play on YouTube">
+                  <button
+                    class="lit-btn-action lit-btn-action--play"
+                    title="Play on YouTube"
+                    @click=${(e: Event) => {
+                      e.stopPropagation();
+                      this.handlePlay();
+                    }}
+                  >
                     ${playIcon}
-                  </div>
+                  </button>
                 `
               : ''}
           </div>
@@ -300,7 +336,7 @@ export class LitSongItem extends LitElement {
             style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; font-size: 0.8rem; color: var(--color-text-secondary);"
           >
             <div>
-              🎤 [DAM]
+              [DAM]
               ${this.song.damNumber
                 ? this.song.damUrl
                   ? html`<a href="${this.song.damUrl}" target="_blank" rel="noopener"
