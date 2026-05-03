@@ -1,13 +1,15 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { RootData, EventData, Song, QueuedSong } from '../types';
-import { starIcon, arrowUpIcon, arrowDownIcon } from '../styles/icons';
+import { RootData, Song, QueuedSong } from '../types';
 import { marked } from 'marked';
 import dataJson from '../data/index.json';
 import loadingWords from '../data/loading.json';
 
 import './lit-event-card';
 import './lit-player';
+import './lit-footer';
+import './lit-header';
+import './lit-nav-years';
 
 const allData = dataJson as unknown as RootData;
 const COLORS = [
@@ -163,12 +165,6 @@ export class LitMusicApp extends LitElement {
       /* Padding moved to children to avoid squashing the whole container */
     }
 
-    :host(.mv-active) .lit-header {
-      width: 50%;
-      padding-right: 1rem;
-      box-sizing: border-box;
-    }
-
     :host(.mv-active) .lit-main {
       max-width: none;
       margin: 0;
@@ -177,9 +173,7 @@ export class LitMusicApp extends LitElement {
       box-sizing: border-box;
     }
 
-    :host(.mv-active) #navigations {
-      right: calc(50% + 1rem);
-    }
+
 
     @media (max-width: 768px) {
       :host {
@@ -188,10 +182,6 @@ export class LitMusicApp extends LitElement {
       }
       :host(.mv-active) {
         padding-bottom: 0;
-      }
-      :host(.mv-active) .lit-header {
-        width: 100%;
-        padding-right: 0;
       }
       :host(.mv-active) .lit-main {
         width: 100%;
@@ -267,99 +257,44 @@ export class LitMusicApp extends LitElement {
       margin-top: 0;
     }
 
-    .lit-header {
-      background: var(--color-surface);
-      box-shadow: var(--shadow-sm);
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      height: calc((1 - var(--intro-progress, 0)) * 100vh + var(--intro-progress, 0) * 128px);
-      transition: box-shadow var(--transition-fast);
+
+
+    .lit-main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 128px 1rem 2rem;
     }
 
-    .lit-header__inner {
-      width: 100%;
-      height: 100%;
+    .lit-controls {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
+      justify-content: flex-end;
+      margin-bottom: 2rem;
     }
 
-    .lit-intro-spacer {
-      width: 100%;
-      height: 100vh;
-    }
-
-    .lit-header__logos {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      padding: 0;
-      height: 56px;
-      max-width: 90vw;
-      transform: scale(calc(1 - (var(--intro-progress, 0) * 0.28)));
-      transform-origin: center;
-      margin-bottom: calc((1 - var(--intro-progress, 0)) * 1.5rem + var(--intro-progress, 0) * 0.35rem);
-    }
-
-    .lit-scroll-down {
-      position: absolute;
-      bottom: 150px;
-      left: 50%;
-      transform: translateX(-50%);
+    .lit-btn-random {
+      background: var(--color-blue);
+      color: white;
       border: none;
-      background: transparent;
-      color: var(--color-text-secondary);
-      padding: 0.2rem 0.4rem;
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.1rem;
+      padding: 12px 24px;
+      border-radius: var(--radius-full);
+      font-weight: bold;
+      font-size: 1rem;
       cursor: pointer;
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      line-height: 1;
-      transition: opacity var(--transition-fast), transform var(--transition-fast);
-      opacity: 0.62;
-    }
-
-    .lit-scroll-down:hover {
-      transform: translateX(-50%) translateY(-1px);
-      opacity: calc((1 - var(--intro-progress, 0)) * 0.82);
-    }
-
-    .lit-scroll-down__chevron {
-      display: inline-flex;
-      flex-direction: column;
+      display: flex;
       align-items: center;
-      gap: 1px;
-      margin-top: 1px;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-fast);
     }
 
-    .lit-scroll-down__chevron-line {
-      width: 6px;
-      height: 6px;
-      border-right: 1px solid currentColor;
-      border-bottom: 1px solid currentColor;
-      transform: rotate(45deg);
+    .lit-btn-random:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      background: #004ecc;
     }
 
-    .lit-scroll-down--hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(-50%);
-    }
 
-    .lit-header__logos img {
-      height: 100%;
-    }
+
 
     /* Splash & Loading Animations */
     #loading {
@@ -396,280 +331,9 @@ export class LitMusicApp extends LitElement {
       color: #333;
     }
 
-    .lit-header__logos #logo,
-    .lit-header__logos #music {
-      transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .lit-header__logos.splash-active #logo {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-
-    .lit-header__logos.splash-active #music {
-      opacity: 0;
-      transform: translateX(20px);
-    }
-
-    .lit-tabs {
-      display: flex;
-      gap: 8px;
-      background: #f1f5f9;
-      padding: 4px;
-      border-radius: var(--radius-full);
-    }
-
-    @media (max-width: 768px) {
-      .lit-header__logos {
-        height: min(40px, 9vw);
-      }
-      .lit-scroll-down {
-        bottom: 2.75rem;
-      }
-    }
-
-    .lit-tabs__button {
-      border: none;
-      background: transparent;
-      padding: 8px 24px;
-      font-size: 1rem;
-      font-weight: bold;
-      color: var(--color-text-secondary);
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      transition: var(--transition-fast);
-    }
-
-    .lit-tabs__button--active {
-      background: var(--color-surface);
-      color: var(--color-blue);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .lit-tabs__button:hover:not(.lit-tabs__button--active) {
-      color: var(--color-text-primary);
-    }
-
-    .lit-main {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 128px 1rem 2rem;
-    }
-
-    .lit-controls {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 2rem;
-    }
-
-    .lit-btn-random {
-      background: var(--color-blue);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: var(--radius-full);
-      font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: var(--shadow-sm);
-      transition: var(--transition-fast);
-    }
-
-    .lit-btn-random:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-      background: #004ecc;
-    }
-
-    .lit-footer {
-      background: #f1f5f9;
-      padding: 3rem 1rem;
-      text-align: center;
-      margin-top: 4rem;
-      border-top: 1px solid #e2e8f0;
-      color: var(--color-text-secondary);
-    }
-
-    .lit-footer__inner {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    #thanks {
-      font-size: 2rem;
-      font-weight: 800;
-      margin-bottom: 2rem;
-      text-transform: uppercase;
-      letter-spacing: 0;
-    }
-
-    .copyright {
-      font-size: 0.8rem;
-      margin-top: 2rem;
-    }
-
-    .colorful {
-      display: inline-block;
-      transition: transform 0.3s;
-    }
-
-    .colorful:hover {
-      transform: translateY(-5px);
-    }
-
-    .colorful:nth-child(6n+1) { color: var(--color-red); }
-    .colorful:nth-child(6n+2) { color: var(--color-yellow); }
-    .colorful:nth-child(6n+3) { color: var(--color-green); }
-    .colorful:nth-child(6n+4) { color: var(--color-blue); }
-    .colorful:nth-child(6n+5) { color: var(--color-orange); }
-    .colorful:nth-child(6n+0) { color: var(--color-purple); }
-
-    .icon-gh {
-      height: 1.2em;
-      vertical-align: middle;
-    }
-
-    .lit-footer a {
-      color: var(--color-blue);
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .lit-footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* Right Navigation similar to v1 */
-    #navigations {
-      position: fixed;
-      display: flex;
-      align-items: flex-end;
-      flex-direction: column;
-      top: 50%;
-      transform: translateY(-50%);
-      right: 1em;
-      z-index: 110;
-      padding: 0;
-      margin: 0;
-      list-style: none;
-      font-size: 0.8em;
-    }
-
-    .nav-year {
-      cursor: pointer;
-      position: relative;
-      margin: 0.5em 0;
-      display: grid;
-      grid-template-columns: min-content;
-      grid-template-rows: 2em;
-      z-index: 1;
-    }
-
-    .nav-year:hover {
-      z-index: 10;
-    }
-
-    .nav-year > a.year-main-link {
-      grid-column: 1;
-      grid-row: 1;
-      background: var(--theme-color);
-      border: solid 2px var(--theme-color);
-      color: #fff;
-      border-radius: 2em;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      height: 2em;
-      min-width: 2em;
-      box-sizing: border-box;
-      transition: background 0.4s, color 0.4s, border-radius 0.4s ease;
-      position: relative;
-      z-index: 2;
-    }
-
-    .nav-year > a.year-main-link .label {
-      display: none;
-      padding: 0.5em;
-      flex: 1;
-      text-align: left;
-      font-weight: bold;
-    }
-
-    .nav-year > a.year-main-link .short-label {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .lit-intro-spacer {
       width: 100%;
-      font-weight: bold;
-    }
-
-    .nav-year:hover > a.year-main-link {
-      background: #fff;
-      color: var(--theme-color);
-      border-radius: 2em 2em 2em 0;
-    }
-
-    .nav-year.no-panel:hover > a.year-main-link {
-      border-radius: 2em;
-    }
-
-    .nav-year:hover > a.year-main-link .label {
-      display: block;
-    }
-
-    .nav-year:hover > a.year-main-link .short-label {
-      display: none;
-    }
-
-    .nav-year .sub-nav-panel {
-      grid-column: 1;
-      grid-row: 1;
-      align-self: start;
-      justify-self: stretch;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      max-width: 0;
-      max-height: 0;
-      opacity: 0;
-      background: var(--theme-color);
-      border-radius: 0 0 0.5em 0.5em;
-      margin-right: 2em;
-      margin-top: calc(2em - 2px);
-      transition: max-width 0.4s ease, max-height 0.4s ease, opacity 0.3s ease, margin-right 0.4s ease;
-      white-space: nowrap;
-      z-index: 1;
-    }
-
-    .nav-year:hover .sub-nav-panel {
-      max-width: 500px;
-      max-height: 500px;
-      opacity: 1;
-      margin-right: 2.8em;
-    }
-
-    .nav-year .sub-nav-panel a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.85em;
-      font-weight: 500;
-      padding: 0.4em 1em;
-      transition: background 0.2s;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-      text-align: left;
-    }
-
-    .nav-year .sub-nav-panel a:last-child {
-      border-bottom: none;
-    }
-
-    .nav-year .sub-nav-panel a:hover {
-      background: rgba(255, 255, 255, 0.2);
+      height: 100vh;
     }
   `;
 
@@ -819,51 +483,7 @@ export class LitMusicApp extends LitElement {
     window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
   }
 
-  private renderLogoGroup(animated = false) {
-    const base = import.meta.env.BASE_URL;
-    if (animated) {
-      return html`
-        <div class="lit-header__logos ${this.splashActive ? 'splash-active' : ''}">
-          <img src="${base}res/img/mark.svg" alt="Mark" id="mark">
-          <img src="${base}res/img/logo.svg" alt="Life is Tech!" id="logo">
-          <img src="${base}res/img/music.svg" alt="music" id="music">
-        </div>
-      `;
-    }
 
-    return html`
-      <div class="lit-header__logos">
-        <img src="${base}res/img/mark.svg" alt="Mark">
-        <img src="${base}res/img/logo.svg" alt="Life is Tech!">
-        <img src="${base}res/img/music.svg" alt="music">
-      </div>
-    `;
-  }
-
-  private renderTabButtons() {
-    return html`
-      <div class="lit-tabs">
-        <button 
-          class="lit-tabs__button ${this.activeTab === 'camp' ? 'lit-tabs__button--active' : ''}"
-          @click=${() => this.setTab('camp')}
-        >
-          Camp
-        </button>
-        <button 
-          class="lit-tabs__button ${this.activeTab === 'school' ? 'lit-tabs__button--active' : ''}"
-          @click=${() => this.setTab('school')}
-        >
-          School
-        </button>
-        <button 
-          class="lit-tabs__button ${this.activeTab === 'event' ? 'lit-tabs__button--active' : ''}"
-          @click=${() => this.setTab('event')}
-        >
-          Event
-        </button>
-      </div>
-    `;
-  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -908,66 +528,27 @@ export class LitMusicApp extends LitElement {
         <img src="${base}res/img/loading.svg" alt="Loading">
       </div>
 
-      <header class="lit-header" style="--intro-progress: ${this.introProgress};">
-        <div class="lit-header__inner">
-          ${this.renderLogoGroup(true)}
-          ${this.renderTabButtons()}
-          <button class="lit-scroll-down ${isScrollDownVisible ? '' : 'lit-scroll-down--hidden'}" @click=${this.scrollToContentStart} aria-label="Scroll down">
-            <span>School Down</span>
-            <span class="lit-scroll-down__chevron" aria-hidden="true">
-              <span class="lit-scroll-down__chevron-line"></span>
-              <span class="lit-scroll-down__chevron-line"></span>
-            </span>
-          </button>
-        </div>
-      </header>
+      <lit-header
+        .introProgress=${this.introProgress}
+        .activeTab=${this.activeTab}
+        .isMobile=${this.isMobile}
+        .splashActive=${this.splashActive}
+        .isAtPageTop=${this.isAtPageTop}
+        .isMVMode=${this.isMVMode}
+        @tab-changed=${(e: CustomEvent) => this.setTab(e.detail)}
+        @scroll-click=${this.scrollToContentStart}
+      ></lit-header>
 
       <div class="lit-intro-spacer"></div>
 
-      ${!this.isMobile ? html`
-      <ul id="navigations" style="${this.navigationTop ? `--nav-top: ${this.navigationTop}px;` : ''} opacity: ${isSideNavVisible ? 1 : 0}; pointer-events: ${isSideNavVisible ? 'auto' : 'none'}; transition: opacity var(--transition-fast);">
-        <li class="nav-year no-panel" style="--theme-color: #333;">
-          <a class="year-main-link" href="#" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-            <span class="label">TOP</span>
-            <span class="short-label">${arrowUpIcon}</span>
-          </a>
-        </li>
-        ${sortedYears.map(([year, _events], index) => {
-      const color = COLORS[index % COLORS.length];
-      const sortedEvents = [..._events].sort((a, b) => {
-        const getSeasonRank = (name: string) => {
-          if (name.includes('Winter')) return 4;
-          if (name.includes('Autumn')) return 3;
-          if (name.includes('Summer')) return 2;
-          if (name.includes('Spring')) return 1;
-          return 0;
-        };
-        return getSeasonRank(b.name) - getSeasonRank(a.name);
-      });
-      return html`
-            <li class="nav-year" style="--theme-color: ${color};">
-              <a class="year-main-link" href="#" @click=${(e: Event) => { this.scrollToId(e, createId('year-' + year)); }}>
-                <span class="label">${year}</span>
-                <span class="short-label">${isNaN(Number(year)) ? starIcon : year.slice(-2)}</span>
-              </a>
-              <div class="sub-nav-panel">
-                ${sortedEvents.map(ev => html`
-                  <a href="#" @click=${(e: Event) => { e.preventDefault(); e.stopPropagation(); this.scrollToEvent(e, ev.name); }}>
-                    ${ev.name}
-                  </a>
-                `)}
-              </div>
-            </li>
-          `;
-    })}
-        <li class="nav-year no-panel" style="--theme-color: #333;">
-          <a class="year-main-link" href="#" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }}>
-            <span class="label">Thanks!</span>
-            <span class="short-label">!</span>
-          </a>
-        </li>
-      </ul>
-      ` : ''}
+      <lit-nav-years
+        .years=${sortedYears}
+        .isMobile=${this.isMobile}
+        .navigationTop=${this.navigationTop}
+        .isVisible=${isSideNavVisible}
+        @year-click=${(e: CustomEvent) => this.scrollToId(e.detail.event, e.detail.id)}
+        @event-click=${(e: CustomEvent) => this.scrollToEvent(e.detail.event, e.detail.name)}
+      ></lit-nav-years>
 
       <main class="lit-main" @open-markdown=${this.handleOpenMarkdown}>
         ${sortedYears.map(([year, events]) => {
@@ -1011,29 +592,7 @@ export class LitMusicApp extends LitElement {
         </div>
       ` : ''}
 
-      <footer class="lit-footer">
-        <div class="lit-footer__inner">
-          <p id="thanks">
-            ${Array.from("Thanks for visiting!").map(char => html`
-              <span class="colorful" style="${char === ' ' ? 'margin-right:0.5em;' : ''}">${char}</span>
-            `)}
-          </p>
-          <p>
-            Do you have any information?<br>
-            Tell me on <a href="https://www.facebook.com/LiTmusic-182225395894104" target="_blank" rel="noopener">Facebook</a>,<br>
-            or<br>
-            You can check it on <a href="https://github.com/lit-kansai-members/music" target="_blank" rel="noopener">
-              <img src="${base}res/img/github-mark.svg" alt="GitHub" class="icon-gh"> GitHub
-            </a>.<br>
-            <br>
-            曲はこちらからリクエストできます！<br>
-            <a href="${base}post/">→掲載をリクエストする (GitHubアカウントが必要です)</a><br>
-            <br>
-            <small>This project is unofficial.</small>
-          </p>
-          <p class="copyright">&copy; Life is Tech ! Kansai Members</p>
-        </div>
-      </footer>
+      <lit-footer .isMVMode=${this.isMVMode}></lit-footer>
 
       ${!this.isMobile ? html`
       <lit-player 
