@@ -4,56 +4,15 @@
 
 Life is Tech ! で使われている BGM をまとめたリポジトリです。関西のメンバーを中心にまとめています！もちろん関西以外のメンバーも Welcome！是非活用してくださいね！
 
-[Web ページ](http://lit-kansai-members.github.io/music/)（[index.yml](./index.yml)から自動生成）
+[Web ページ](http://lit-kansai-members.github.io/music/)（[/src/data/index.json](./src/data/index.json)から自動生成）
 
 ## こんな曲かかってたよ！
 
 そんな曲をご存知の方は Issues で提案していただければと思います。
 
-[新曲の追加](https://github.com/lit-kansai-members/music/issues/new?labels=New+Song+Request&template=NEW_SONG.md)
+[新曲の追加](http://lit-kansai-members.github.io/music/post/)
 /
 [Theme の追加](https://github.com/lit-kansai-members/music/issues/new?labels=New+Theme+Request&template=NEW_THEME.md)
-
-<!--
-[![Form](https://placehold.jp/24/3d4070/e8e8e8/170x50.png?text=%E6%8F%90%E6%A1%88%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0&css=%7B%22border-radius%22%3A%227px%22%7D)](https://goo.gl/forms/VNdvhC37OuRBtWCD3)
-
-## Contribution
-### Life is Tech! BGM におけるContributionのやり方講座
-
-1. Fork
-2. Edit
-3. Commitをする
-4. Pull Request
-5. Marge plz! :)
-
--->
-
-<!--
-### :warning: WARNING :warning:
-- 以下のフォーマットを使用してください（現在はJSONデータ `src/data/index.json` で管理されています。トップページの「曲を追加リクエストする」または直接 `/post/` にアクセスしてフォームから入力することで、正しいJSON形式で Issue を自動生成できます。
-
-  ```json
-  {
-    "name": "Spring Camp 2026",
-    "background": "../../res/img/backgrounds/camp_2026_spring.webp",
-    "songs": [
-      {
-        "title": "偉星人",
-        "author": "Vaundy",
-        "description": "映画「○○」主題歌",
-        "damNumber": "1279-96",
-        "damUrl": "https://www.clubdam.com/...",
-        "joyNumber": "642661",
-        "joyUrl": "https://www.joysound.com/...",
-        "lyricsSiteName": "歌ネット",
-        "lyricsUrl": "https://www.uta-net.com/...",
-        "youtubeUrl": "//youtu.be/aDaWuvpB_Kw",
-        "spotify": "https://open.spotify.com/track/..."
-      }
-    ]
-  }
-  ```
--->
 
 ## ルール
 
@@ -74,7 +33,7 @@ yarn test
 
 ## Special Thanks
 
-- English×ITCamp 2014 ご参加のみなさま
+- English × ITCamp 2014 ご参加のみなさま
 - てっくな予感ぷろじぇくと(とき・あおい・HasuLi・もやし・おとのん・なと・とっぽ・わくわくさん・ゆかり・のぞみ)
 - かずさ [@KazusaLiT](//x.com/KazusaLiT)（X）
 

@@ -283,7 +283,7 @@ export class LitSongItem extends LitElement {
             <span class="lit-song__author">${this.song.author}</span>
           </div>
           <div class="lit-song__actions">
-            ${youtubeId
+            ${youtubeId && !showInlinePlayer
               ? html`
                   <div class="lit-btn-action lit-btn-action--play" title="Play on YouTube">
                     ${playIcon}
