@@ -522,40 +522,61 @@ export class LitPlayer extends LitElement {
     this.updatePlayerSize();
   }
 
+  private isSongPlayable(index: number): boolean {
+    const song = this.queue[index];
+    if (!song) return false;
+    const ytUrl = song.youtubeUrl || '';
+    return !!ytUrl.match(
+      /(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/
+    );
+  }
+
   private handleNext() {
     if (this.isShuffle && !this.isRepeat) {
-      const nextIndex = Math.floor(Math.random() * this.queue.length);
-      this.dispatchEvent(
-        new CustomEvent('index-changed', {
-          detail: { index: nextIndex },
-          bubbles: true,
-          composed: true,
-        })
-      );
-      return;
-    }
+      // Find all playable indices
+      const playableIndices = this.queue
+        .map((_, i) => i)
+        .filter((i) => this.isSongPlayable(i) && i !== this.currentIndex);
 
-    if (this.currentIndex < this.queue.length - 1) {
-      this.dispatchEvent(
-        new CustomEvent('index-changed', {
-          detail: { index: this.currentIndex + 1 },
-          bubbles: true,
-          composed: true,
-        })
-      );
-    } else {
-      // Reached the end. Wrap if Repeat is on.
-      if (this.isRepeat) {
+      if (playableIndices.length > 0) {
+        const nextIndex = playableIndices[Math.floor(Math.random() * playableIndices.length)];
         this.dispatchEvent(
           new CustomEvent('index-changed', {
-            detail: { index: 0 },
+            detail: { index: nextIndex },
             bubbles: true,
             composed: true,
           })
         );
-      } else {
-        this.isPlaying = false;
-        if (this.ytPlayer && this.ytPlayer.stopVideo) this.ytPlayer.stopVideo();
+      }
+      return;
+    }
+
+    let nextIndex = this.currentIndex;
+    const originalIndex = this.currentIndex;
+
+    while (true) {
+      nextIndex++;
+      if (nextIndex >= this.queue.length) {
+        if (this.isRepeat) {
+          nextIndex = 0;
+        } else {
+          this.isPlaying = false;
+          if (this.ytPlayer && this.ytPlayer.stopVideo) this.ytPlayer.stopVideo();
+          return;
+        }
+      }
+
+      if (nextIndex === originalIndex) return; // Cycled through all
+
+      if (this.isSongPlayable(nextIndex)) {
+        this.dispatchEvent(
+          new CustomEvent('index-changed', {
+            detail: { index: nextIndex },
+            bubbles: true,
+            composed: true,
+          })
+        );
+        return;
       }
     }
   }
@@ -574,22 +595,32 @@ export class LitPlayer extends LitElement {
       this.handleNext();
       return;
     }
-    if (this.currentIndex > 0) {
-      this.dispatchEvent(
-        new CustomEvent('index-changed', {
-          detail: { index: this.currentIndex - 1 },
-          bubbles: true,
-          composed: true,
-        })
-      );
-    } else if (this.isRepeat) {
-      this.dispatchEvent(
-        new CustomEvent('index-changed', {
-          detail: { index: this.queue.length - 1 },
-          bubbles: true,
-          composed: true,
-        })
-      );
+
+    let prevIndex = this.currentIndex;
+    const originalIndex = this.currentIndex;
+
+    while (true) {
+      prevIndex--;
+      if (prevIndex < 0) {
+        if (this.isRepeat) {
+          prevIndex = this.queue.length - 1;
+        } else {
+          return; // No more previous songs
+        }
+      }
+
+      if (prevIndex === originalIndex) return;
+
+      if (this.isSongPlayable(prevIndex)) {
+        this.dispatchEvent(
+          new CustomEvent('index-changed', {
+            detail: { index: prevIndex },
+            bubbles: true,
+            composed: true,
+          })
+        );
+        return;
+      }
     }
   }
 
