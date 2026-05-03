@@ -298,9 +298,11 @@ export class LitMusicApp extends LitElement {
     .lit-header__logos {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0;
       padding: 0;
       height: 56px;
+      max-width: 90vw;
       transform: scale(calc(1 - (var(--intro-progress, 0) * 0.28)));
       transform-origin: center;
       margin-bottom: calc((1 - var(--intro-progress, 0)) * 1.5rem + var(--intro-progress, 0) * 0.35rem);
@@ -420,6 +422,9 @@ export class LitMusicApp extends LitElement {
     }
 
     @media (max-width: 768px) {
+      .lit-header__logos {
+        height: min(40px, 9vw);
+      }
       .lit-scroll-down {
         bottom: 2.75rem;
       }
