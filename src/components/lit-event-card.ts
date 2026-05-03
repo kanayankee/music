@@ -10,7 +10,6 @@ export class LitEventCard extends LitElement {
   @property({ type: String }) playingEventName = '';
   @property({ type: Boolean }) isMobile = false;
 
-
   static styles = css`
     :host {
       display: block;
@@ -30,7 +29,7 @@ export class LitEventCard extends LitElement {
       background-position: center;
       position: relative;
       color: white;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -38,12 +37,15 @@ export class LitEventCard extends LitElement {
       width: 100%;
       box-sizing: border-box;
     }
-    
+
     .lit-event-card__header::before {
-      content: "";
+      content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.3);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
       z-index: 1;
     }
 
@@ -98,7 +100,6 @@ export class LitEventCard extends LitElement {
     }
   `;
 
-
   render() {
     // Determine background URL
     const base = import.meta.env.BASE_URL;
@@ -107,27 +108,38 @@ export class LitEventCard extends LitElement {
       bgUrl = this.event.background.replace('../../res/', `${base}res/`);
     } else {
       const isBefore2024 = (this.event as any).isBefore2024 === true;
-      bgUrl = isBefore2024 ? `${base}res/img/backgrounds/common_v1.webp` : `${base}res/img/backgrounds/common_v2.webp`;
+      bgUrl = isBefore2024
+        ? `${base}res/img/backgrounds/common_v1.webp`
+        : `${base}res/img/backgrounds/common_v2.webp`;
     }
-    
+
     return html`
       <article class="lit-event-card">
-        <header class="lit-event-card__header" style=${bgUrl ? `background-image: url('${bgUrl}')` : ''}>
+        <header
+          class="lit-event-card__header"
+          style=${bgUrl ? `background-image: url('${bgUrl}')` : ''}
+        >
           <div class="lit-event-card__title-wrap">
             <h3 class="lit-event-card__year">${this.event.year}</h3>
             <h2 class="lit-event-card__title">${this.event.name}</h2>
-            ${this.event.theme ? html`<p class="lit-event-card__theme">${this.event.theme}</p>` : ''}
+            ${this.event.theme
+              ? html`<p class="lit-event-card__theme">${this.event.theme}</p>`
+              : ''}
           </div>
         </header>
         <div class="lit-event-card__body">
-          ${this.event.songs.map((song) => html`
-            <lit-song-item 
-              .song=${song} 
-              .isMobile=${this.isMobile}
-              ?is-playing=${this.playingSongTitle === song.title && this.playingEventName === this.event.name}
-              @play-song=${(e: CustomEvent) => this.handlePlaySongInEvent(e, song)}>
-            </lit-song-item>
-          `)}
+          ${this.event.songs.map(
+            (song) => html`
+              <lit-song-item
+                .song=${song}
+                .isMobile=${this.isMobile}
+                ?is-playing=${this.playingSongTitle === song.title &&
+                this.playingEventName === this.event.name}
+                @play-song=${(e: CustomEvent) => this.handlePlaySongInEvent(e, song)}
+              >
+              </lit-song-item>
+            `
+          )}
         </div>
       </article>
     `;
@@ -135,14 +147,16 @@ export class LitEventCard extends LitElement {
 
   private handlePlaySongInEvent(e: CustomEvent, targetSong: Song) {
     e.stopPropagation(); // Stop the original event
-    this.dispatchEvent(new CustomEvent('play-song-queue', {
-      detail: { 
-        song: targetSong, 
-        queue: this.event.songs,
-        eventName: this.event.name
-      },
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('play-song-queue', {
+        detail: {
+          song: targetSong,
+          queue: this.event.songs,
+          eventName: this.event.name,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 }

@@ -2,9 +2,19 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { QueuedSong } from '../types';
 import {
-  spotifyIcon, playIcon, pauseIcon, shuffleIcon, repeatIcon,
-  filmIcon, backwardIcon, forwardIcon, volumeHighIcon,
-  volumeLowIcon, volumeXIcon, chevronUpIcon, chevronDownIcon
+  spotifyIcon,
+  playIcon,
+  pauseIcon,
+  shuffleIcon,
+  repeatIcon,
+  filmIcon,
+  backwardIcon,
+  forwardIcon,
+  volumeHighIcon,
+  volumeLowIcon,
+  volumeXIcon,
+  chevronUpIcon,
+  chevronDownIcon,
 } from '../styles/icons';
 
 declare global {
@@ -27,7 +37,7 @@ export class LitPlayer extends LitElement {
   @state() private volume = 100;
   @state() private currentTime = 0;
   @state() private duration = 0;
-  
+
   private ytPlayer: any = null;
   private progressInterval: number | undefined;
   private skipNextUpdateLoad = false;
@@ -64,7 +74,6 @@ export class LitPlayer extends LitElement {
       gap: 24px;
       pointer-events: auto;
     }
-    
 
     .lit-player__info {
       display: flex;
@@ -135,7 +144,7 @@ export class LitPlayer extends LitElement {
     }
 
     .lit-btn-control:hover {
-      background: rgba(0,0,0,0.05);
+      background: rgba(0, 0, 0, 0.05);
       color: var(--color-text-primary);
     }
 
@@ -151,19 +160,30 @@ export class LitPlayer extends LitElement {
       animation: color-fade 12s infinite;
     }
     @keyframes color-fade {
-      0% { color: var(--color-red); }
-      20% { color: var(--color-yellow); }
-      40% { color: var(--color-green); }
-      60% { color: var(--color-blue); }
-      80% { color: var(--color-purple); }
-      100% { color: var(--color-red); }
+      0% {
+        color: var(--color-red);
+      }
+      20% {
+        color: var(--color-yellow);
+      }
+      40% {
+        color: var(--color-green);
+      }
+      60% {
+        color: var(--color-blue);
+      }
+      80% {
+        color: var(--color-purple);
+      }
+      100% {
+        color: var(--color-red);
+      }
     }
     .lit-btn-control--play:hover {
       opacity: 0.8;
       transform: scale(1.1);
       background-color: transparent;
     }
-
 
     .lit-player__progress-container {
       display: flex;
@@ -244,7 +264,7 @@ export class LitPlayer extends LitElement {
       width: 50%;
       height: calc(100vh - 80px);
       z-index: 100;
-      box-shadow: -4px 0 16px rgba(0,0,0,0.2);
+      box-shadow: -4px 0 16px rgba(0, 0, 0, 0.2);
       pointer-events: auto;
       background: #000;
     }
@@ -296,7 +316,7 @@ export class LitPlayer extends LitElement {
       opacity: 0.8;
     }
     .lit-player__spotify {
-      color: #1DB954;
+      color: #1db954;
       font-size: 1.25rem;
       display: flex;
       align-items: center;
@@ -307,7 +327,7 @@ export class LitPlayer extends LitElement {
     .lit-player__spotify:hover {
       transform: scale(1.1);
     }
-    
+
     @media (max-width: 768px) {
       .lit-player__container {
         display: none !important; /* Hide player bar completely on mobile */
@@ -325,11 +345,13 @@ export class LitPlayer extends LitElement {
     const isMobile = window.innerWidth <= 768;
     if (isMobile && !this.isMVMode) {
       this.isMVMode = true;
-      this.dispatchEvent(new CustomEvent('mv-mode-changed', {
-        detail: { active: true },
-        bubbles: true,
-        composed: true
-      }));
+      this.dispatchEvent(
+        new CustomEvent('mv-mode-changed', {
+          detail: { active: true },
+          bubbles: true,
+          composed: true,
+        })
+      );
     }
   }
 
@@ -373,22 +395,29 @@ export class LitPlayer extends LitElement {
     const iframe = this.shadowRoot?.querySelector('iframe');
     if (iframe) {
       if (this.isMVMode) {
-        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        iframe.setAttribute(
+          'allow',
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+        );
       } else {
-        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share');
+        iframe.setAttribute(
+          'allow',
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share'
+        );
       }
     }
   }
 
   private toggleMVMode() {
     this.isMVMode = !this.isMVMode;
-    this.dispatchEvent(new CustomEvent('mv-mode-changed', {
-      detail: { active: this.isMVMode },
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('mv-mode-changed', {
+        detail: { active: this.isMVMode },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
-
 
   private loadCurrentSong() {
     this.currentTime = 0;
@@ -401,7 +430,9 @@ export class LitPlayer extends LitElement {
     if (!song) return;
 
     const ytUrl = song.youtubeUrl || '';
-    const ytMatch = ytUrl.match(/(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+    const ytMatch = ytUrl.match(
+      /(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/
+    );
     const videoId = ytMatch ? ytMatch[1] : null;
 
     if (videoId) {
@@ -434,15 +465,15 @@ export class LitPlayer extends LitElement {
       width: '0',
       videoId: videoId,
       playerVars: {
-        'autoplay': 1,
-        'controls': 1,
-        'rel': 0,
-        'playsinline': 1
+        autoplay: 1,
+        controls: 1,
+        rel: 0,
+        playsinline: 1,
       },
       events: {
-        'onReady': this.onPlayerReady.bind(this),
-        'onStateChange': this.onPlayerStateChange.bind(this)
-      }
+        onReady: this.onPlayerReady.bind(this),
+        onStateChange: this.onPlayerStateChange.bind(this),
+      },
     });
   }
 
@@ -455,7 +486,8 @@ export class LitPlayer extends LitElement {
   private isSeeking = false;
 
   private onPlayerStateChange(event: any) {
-    if (event.data === 1) { // Playing
+    if (event.data === 1) {
+      // Playing
       this.isPlaying = true;
       event.target.setVolume(this.volume);
       this.duration = this.ytPlayer.getDuration();
@@ -464,10 +496,12 @@ export class LitPlayer extends LitElement {
           this.currentTime = this.ytPlayer.getCurrentTime();
         }
       }, 250);
-    } else if (event.data === 2) { // Paused
+    } else if (event.data === 2) {
+      // Paused
       this.isPlaying = false;
       clearInterval(this.progressInterval);
-    } else if (event.data === 0) { // Ended
+    } else if (event.data === 0) {
+      // Ended
       this.isPlaying = false;
       clearInterval(this.progressInterval);
       if (this.isRepeat) {
@@ -482,8 +516,7 @@ export class LitPlayer extends LitElement {
     if (!this.ytPlayer) return;
     if (this.isPlaying) {
       this.ytPlayer.pauseVideo();
-    }
-    else {
+    } else {
       this.ytPlayer.playVideo();
     }
     this.updatePlayerSize();
@@ -492,28 +525,34 @@ export class LitPlayer extends LitElement {
   private handleNext() {
     if (this.isShuffle && !this.isRepeat) {
       const nextIndex = Math.floor(Math.random() * this.queue.length);
-      this.dispatchEvent(new CustomEvent('index-changed', {
-        detail: { index: nextIndex },
-        bubbles: true,
-        composed: true
-      }));
+      this.dispatchEvent(
+        new CustomEvent('index-changed', {
+          detail: { index: nextIndex },
+          bubbles: true,
+          composed: true,
+        })
+      );
       return;
     }
 
     if (this.currentIndex < this.queue.length - 1) {
-      this.dispatchEvent(new CustomEvent('index-changed', {
-        detail: { index: this.currentIndex + 1 },
-        bubbles: true,
-        composed: true
-      }));
+      this.dispatchEvent(
+        new CustomEvent('index-changed', {
+          detail: { index: this.currentIndex + 1 },
+          bubbles: true,
+          composed: true,
+        })
+      );
     } else {
       // Reached the end. Wrap if Repeat is on.
       if (this.isRepeat) {
-        this.dispatchEvent(new CustomEvent('index-changed', {
-          detail: { index: 0 },
-          bubbles: true,
-          composed: true
-        }));
+        this.dispatchEvent(
+          new CustomEvent('index-changed', {
+            detail: { index: 0 },
+            bubbles: true,
+            composed: true,
+          })
+        );
       } else {
         this.isPlaying = false;
         if (this.ytPlayer && this.ytPlayer.stopVideo) this.ytPlayer.stopVideo();
@@ -536,17 +575,21 @@ export class LitPlayer extends LitElement {
       return;
     }
     if (this.currentIndex > 0) {
-      this.dispatchEvent(new CustomEvent('index-changed', {
-        detail: { index: this.currentIndex - 1 },
-        bubbles: true,
-        composed: true
-      }));
+      this.dispatchEvent(
+        new CustomEvent('index-changed', {
+          detail: { index: this.currentIndex - 1 },
+          bubbles: true,
+          composed: true,
+        })
+      );
     } else if (this.isRepeat) {
-      this.dispatchEvent(new CustomEvent('index-changed', {
-        detail: { index: this.queue.length - 1 },
-        bubbles: true,
-        composed: true
-      }));
+      this.dispatchEvent(
+        new CustomEvent('index-changed', {
+          detail: { index: this.queue.length - 1 },
+          bubbles: true,
+          composed: true,
+        })
+      );
     }
   }
 
@@ -584,18 +627,17 @@ export class LitPlayer extends LitElement {
   }
 
   firstUpdated() {
-
-    
     // Sync initial MV mode state with app container
-    this.dispatchEvent(new CustomEvent('mv-mode-changed', {
-      detail: { active: this.isMVMode },
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('mv-mode-changed', {
+        detail: { active: this.isMVMode },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   connectedCallback() {
-
     super.connectedCallback();
     window.addEventListener('keydown', this.handleKeyDown);
     window.addEventListener('resize', this.handleResize);
@@ -625,56 +667,102 @@ export class LitPlayer extends LitElement {
       e.preventDefault();
       this.togglePlay();
     }
-  }
-
+  };
 
   render() {
     const song = this.queue[this.currentIndex];
-    const ytMatch = song?.youtubeUrl?.match(/(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+    const ytMatch = song?.youtubeUrl?.match(
+      /(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/
+    );
     const videoId = ytMatch ? ytMatch[1] : null;
     const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/0.jpg` : '';
 
     return html`
       <div class="lit-player ${this.isMVMode ? 'mv-mode' : ''}">
         <!-- YT Container FIRST (TOP) -->
-        <div class="lit-player__yt ${this.isMVMode && this.queue.length > 0 ? 'lit-player__yt--visible' : ''}">
+        <div
+          class="lit-player__yt ${this.isMVMode && this.queue.length > 0
+            ? 'lit-player__yt--visible'
+            : ''}"
+        >
           <div id="yt-player-container"></div>
         </div>
-        
+
         <div class="lit-player__container">
           <div class="lit-player__info">
-            ${thumbUrl ? html`<img class="lit-player__thumb" src="${thumbUrl}" alt="Thumbnail">` : ''}
+            ${thumbUrl
+              ? html`<img class="lit-player__thumb" src="${thumbUrl}" alt="Thumbnail" />`
+              : ''}
             <div class="lit-player__text">
               <p class="lit-player__event">${song?.eventName || ''}</p>
               <p class="lit-player__title">${song?.title || ''}</p>
               <p class="lit-player__author">${song?.author || ''}</p>
             </div>
-            ${song?.spotify ? html`
-              <a href="${song.spotify}" target="_blank" rel="noopener noreferrer" class="lit-player__spotify" title="Open on Spotify">
-                ${spotifyIcon}
-              </a>
-            ` : ''}
+            ${song?.spotify
+              ? html`
+                  <a
+                    href="${song.spotify}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="lit-player__spotify"
+                    title="Open on Spotify"
+                  >
+                    ${spotifyIcon}
+                  </a>
+                `
+              : ''}
           </div>
-          
+
           <div class="lit-player__controls">
             <div class="lit-player__control-buttons">
-              <button class="lit-btn-control" @click=${() => this.isShuffle = !this.isShuffle} style="color: ${this.isShuffle ? 'var(--color-blue)' : ''}" title="Shuffle">
+              <button
+                class="lit-btn-control"
+                @click=${() => (this.isShuffle = !this.isShuffle)}
+                style="color: ${this.isShuffle ? 'var(--color-blue)' : ''}"
+                title="Shuffle"
+              >
                 ${shuffleIcon}
               </button>
-              <button class="lit-btn-control" @click=${this.handlePrev} ?disabled=${this.currentIndex === 0 && !this.isShuffle}>
+              <button
+                class="lit-btn-control"
+                @click=${this.handlePrev}
+                ?disabled=${this.currentIndex === 0 && !this.isShuffle}
+              >
                 ${backwardIcon}
               </button>
-              <button class="lit-btn-control lit-btn-control--play" @click=${this.togglePlay} title=${this.isPlaying ? 'Pause' : 'Play'}>
+              <button
+                class="lit-btn-control lit-btn-control--play"
+                @click=${this.togglePlay}
+                title=${this.isPlaying ? 'Pause' : 'Play'}
+              >
                 ${this.isPlaying ? pauseIcon : playIcon}
               </button>
-              <button class="lit-btn-control" @click=${this.handleNext} ?disabled=${this.currentIndex >= this.queue.length - 1 && !this.isRepeat && !this.isShuffle}>
+              <button
+                class="lit-btn-control"
+                @click=${this.handleNext}
+                ?disabled=${this.currentIndex >= this.queue.length - 1 &&
+                !this.isRepeat &&
+                !this.isShuffle}
+              >
                 ${forwardIcon}
               </button>
-              <button class="lit-btn-control" @click=${() => this.isRepeat = !this.isRepeat} style="color: ${this.isRepeat ? 'var(--color-blue)' : ''}" title="Repeat One">
+              <button
+                class="lit-btn-control"
+                @click=${() => (this.isRepeat = !this.isRepeat)}
+                style="color: ${this.isRepeat ? 'var(--color-blue)' : ''}"
+                title="Repeat One"
+              >
                 ${repeatIcon}
               </button>
               <!-- Show MV button in controls on mobile only (since volume is hidden) -->
-              <button class="lit-btn-control lit-btn-control--mv ${this.isMVMode ? 'active' : ''} mobile-only-mv" @click=${this.toggleMVMode} title="Toggle MV Mode" style="display: none;">
+              <button
+                class="lit-btn-control lit-btn-control--mv ${this.isMVMode
+                  ? 'active'
+                  : ''} mobile-only-mv"
+                @click=${this.toggleMVMode}
+                title="Toggle MV Mode"
+                style="display: none;"
+              >
                 ${filmIcon}
               </button>
             </div>
@@ -691,18 +779,34 @@ export class LitPlayer extends LitElement {
                 @mouseup=${this.handleSeekEnd}
                 @touchstart=${this.handleSeekStart}
                 @touchend=${this.handleSeekEnd}
-                style="background: linear-gradient(to right, var(--color-text-primary) ${this.duration ? (this.currentTime / this.duration) * 100 : 0}%, var(--color-border) ${this.duration ? (this.currentTime / this.duration) * 100 : 0}%);"
-              >
+                style="background: linear-gradient(to right, var(--color-text-primary) ${this
+                  .duration
+                  ? (this.currentTime / this.duration) * 100
+                  : 0}%, var(--color-border) ${this.duration
+                  ? (this.currentTime / this.duration) * 100
+                  : 0}%);"
+              />
               <span class="time">${this.formatTime(this.duration)}</span>
             </div>
           </div>
           <div class="lit-player__volume">
-            <button class="lit-btn-control lit-btn-control--mv ${this.isMVMode ? 'active' : ''}" @click=${this.toggleMVMode} title="Toggle MV Mode" style="width: 32px; height: 32px;">
+            <button
+              class="lit-btn-control lit-btn-control--mv ${this.isMVMode ? 'active' : ''}"
+              @click=${this.toggleMVMode}
+              title="Toggle MV Mode"
+              style="width: 32px; height: 32px;"
+            >
               ${filmIcon}
             </button>
             <div style="display: flex; align-items: center; gap: 8px;">
-              ${this.volume === 0 ? volumeXIcon : (this.volume < 50 ? volumeLowIcon : volumeHighIcon)}
-              <input type="range" min="0" max="100" .value=${this.volume} @input=${this.handleVolumeChange}>
+              ${this.volume === 0 ? volumeXIcon : this.volume < 50 ? volumeLowIcon : volumeHighIcon}
+              <input
+                type="range"
+                min="0"
+                max="100"
+                .value=${this.volume}
+                @input=${this.handleVolumeChange}
+              />
             </div>
           </div>
         </div>

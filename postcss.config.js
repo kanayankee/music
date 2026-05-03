@@ -4,9 +4,9 @@ export default (ctx) => ({
       stage: 1,
       features: {
         'nesting-rules': true,
-        'custom-properties': false
-      }
+        'custom-properties': false,
+      },
     },
-    cssnano: ctx.mode === 'production' ? {} : false
-  }
-})
+    cssnano: ctx.mode === 'production' ? {} : false,
+  },
+});

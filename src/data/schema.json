@@ -27,7 +27,19 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": ["title", "author", "description", "spotify", "damNumber", "damUrl", "joyNumber", "joyUrl", "lyricsSiteName", "lyricsUrl", "youtubeUrl"],
+                  "required": [
+                    "title",
+                    "author",
+                    "description",
+                    "spotify",
+                    "damNumber",
+                    "damUrl",
+                    "joyNumber",
+                    "joyUrl",
+                    "lyricsSiteName",
+                    "lyricsUrl",
+                    "youtubeUrl"
+                  ],
                   "properties": {
                     "title": { "type": "string" },
                     "author": { "type": "string" },

@@ -8,7 +8,7 @@ const COLORS = [
   'var(--color-green)',
   'var(--color-blue)',
   'var(--color-orange)',
-  'var(--color-purple)'
+  'var(--color-purple)',
 ];
 
 function createId(str: string) {
@@ -73,7 +73,10 @@ export class LitNavYears extends LitElement {
       height: 2em;
       min-width: 2em;
       box-sizing: border-box;
-      transition: background 0.4s, color 0.4s, border-radius 0.4s ease;
+      transition:
+        background 0.4s,
+        color 0.4s,
+        border-radius 0.4s ease;
       position: relative;
       z-index: 2;
     }
@@ -127,7 +130,11 @@ export class LitNavYears extends LitElement {
       border-radius: 0 0 0.5em 0.5em;
       margin-right: 2em;
       margin-top: calc(2em - 2px);
-      transition: max-width 0.4s ease, max-height 0.4s ease, opacity 0.3s ease, margin-right 0.4s ease;
+      transition:
+        max-width 0.4s ease,
+        max-height 0.4s ease,
+        opacity 0.3s ease,
+        margin-right 0.4s ease;
       white-space: nowrap;
       z-index: 1;
     }
@@ -163,9 +170,22 @@ export class LitNavYears extends LitElement {
     if (this.isMobile) return html``;
 
     return html`
-      <ul id="navigations" style="${this.navigationTop ? `--nav-top: ${this.navigationTop}px;` : ''} opacity: ${this.isVisible ? 1 : 0}; pointer-events: ${this.isVisible ? 'auto' : 'none'};">
+      <ul
+        id="navigations"
+        style="${this.navigationTop ? `--nav-top: ${this.navigationTop}px;` : ''} opacity: ${this
+          .isVisible
+          ? 1
+          : 0}; pointer-events: ${this.isVisible ? 'auto' : 'none'};"
+      >
         <li class="nav-year no-panel" style="--theme-color: #333;">
-          <a class="year-main-link" href="#" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+          <a
+            class="year-main-link"
+            href="#"
+            @click=${(e: Event) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
             <span class="label">TOP</span>
             <span class="short-label">${arrowUpIcon}</span>
           </a>
@@ -184,22 +204,50 @@ export class LitNavYears extends LitElement {
           });
           return html`
             <li class="nav-year" style="--theme-color: ${color};">
-              <a class="year-main-link" href="#" @click=${(e: Event) => { this.dispatchEvent(new CustomEvent('year-click', { detail: { event: e, id: createId('year-' + year) } })); }}>
+              <a
+                class="year-main-link"
+                href="#"
+                @click=${(e: Event) => {
+                  this.dispatchEvent(
+                    new CustomEvent('year-click', {
+                      detail: { event: e, id: createId('year-' + year) },
+                    })
+                  );
+                }}
+              >
                 <span class="label">${year}</span>
                 <span class="short-label">${isNaN(Number(year)) ? starIcon : year.slice(-2)}</span>
               </a>
               <div class="sub-nav-panel">
-                ${sortedEvents.map(ev => html`
-                  <a href="#" @click=${(e: Event) => { e.preventDefault(); e.stopPropagation(); this.dispatchEvent(new CustomEvent('event-click', { detail: { event: e, name: ev.name } })); }}>
-                    ${ev.name}
-                  </a>
-                `)}
+                ${sortedEvents.map(
+                  (ev) => html`
+                    <a
+                      href="#"
+                      @click=${(e: Event) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.dispatchEvent(
+                          new CustomEvent('event-click', { detail: { event: e, name: ev.name } })
+                        );
+                      }}
+                    >
+                      ${ev.name}
+                    </a>
+                  `
+                )}
               </div>
             </li>
           `;
         })}
         <li class="nav-year no-panel" style="--theme-color: #333;">
-          <a class="year-main-link" href="#" @click=${(e: Event) => { e.preventDefault(); window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }}>
+          <a
+            class="year-main-link"
+            href="#"
+            @click=${(e: Event) => {
+              e.preventDefault();
+              window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }}
+          >
             <span class="label">Thanks!</span>
             <span class="short-label">!</span>
           </a>

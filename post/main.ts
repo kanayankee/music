@@ -74,11 +74,11 @@ function createSongField() {
       <input type="text" class="s-songDesc" placeholder="映画「○○」主題歌">
     </div>
   `;
-  
+
   wrapper.querySelector('.del-song-btn')?.addEventListener('click', () => {
     wrapper.remove();
   });
-  
+
   songsContainer.appendChild(wrapper);
 }
 
@@ -89,7 +89,7 @@ addSongBtn.addEventListener('click', createSongField);
 
 document.getElementById('post-form')?.addEventListener('submit', (e) => {
   e.preventDefault();
-  
+
   const eventName = (document.getElementById('eventName') as HTMLInputElement).value;
   const targetIssueTitle = `Add: ${eventName}`;
   const bgUrl = (document.getElementById('backgroundUrl') as HTMLInputElement).value;
@@ -97,14 +97,14 @@ document.getElementById('post-form')?.addEventListener('submit', (e) => {
   const eventPayload: any = {
     name: eventName,
   };
-  
+
   if (bgUrl) {
     eventPayload.background = bgUrl;
   } else {
-    eventPayload.background = ""; // as user requested: "空白でok"
+    eventPayload.background = ''; // as user requested: "空白でok"
   }
 
-  const generatedSongs = Array.from(document.querySelectorAll('.song-block')).map(wrapper => {
+  const generatedSongs = Array.from(document.querySelectorAll('.song-block')).map((wrapper) => {
     const title = (wrapper.querySelector('.s-title') as HTMLInputElement).value;
     const author = (wrapper.querySelector('.s-author') as HTMLInputElement).value;
     const youtubeUrl = (wrapper.querySelector('.s-youtube') as HTMLInputElement).value;
@@ -116,20 +116,20 @@ document.getElementById('post-form')?.addEventListener('submit', (e) => {
     const lyricsUrl = (wrapper.querySelector('.s-lyricsUrl') as HTMLInputElement).value;
     const extraDesc = (wrapper.querySelector('.s-songDesc') as HTMLInputElement).value;
 
-    let ytBody = "";
+    let ytBody = '';
     if (youtubeUrl) {
       const ytMatch = youtubeUrl.match(/(?:(?:youtu\.be\/)|(?:v=))([a-zA-Z0-9_-]{11})/);
       if (ytMatch) ytBody = `//youtu.be/${ytMatch[1]}`;
       else ytBody = youtubeUrl;
     }
 
-    let lyricDomain = "";
+    let lyricDomain = '';
     if (lyricsUrl) {
       try {
         const urlObj = new URL(lyricsUrl);
         lyricDomain = urlObj.hostname;
-      } catch(e) {
-        lyricDomain = "歌詞サイト";
+      } catch (e) {
+        lyricDomain = '歌詞サイト';
       }
     }
 
@@ -138,17 +138,17 @@ document.getElementById('post-form')?.addEventListener('submit', (e) => {
       author: author,
       description: extraDesc,
       spotify: spotifyUrl || undefined,
-      damNumber: damNum || "",
-      damUrl: damUrl || "",
-      joyNumber: joyNum || "",
-      joyUrl: joyUrl || "",
+      damNumber: damNum || '',
+      damUrl: damUrl || '',
+      joyNumber: joyNum || '',
+      joyUrl: joyUrl || '',
       lyricsSiteName: lyricDomain || undefined,
       lyricsUrl: lyricsUrl || undefined,
-      youtubeUrl: ytBody || undefined
+      youtubeUrl: ytBody || undefined,
     };
 
     // Clean up undefined properties to make JSON output cleaner
-    Object.keys(songObj).forEach(key => songObj[key] === undefined && delete songObj[key]);
+    Object.keys(songObj).forEach((key) => songObj[key] === undefined && delete songObj[key]);
 
     return songObj;
   });
@@ -156,7 +156,7 @@ document.getElementById('post-form')?.addEventListener('submit', (e) => {
   eventPayload.songs = generatedSongs;
 
   const jsonStr = JSON.stringify(eventPayload, null, 2);
-  
+
   const body = `以下のイベント/曲の追加をお願いします。
 
 \`\`\`json
@@ -165,6 +165,6 @@ ${jsonStr}
 `;
 
   const issueUrl = `https://github.com/lit-kansai-members/music/issues/new?title=${encodeURIComponent(targetIssueTitle)}&labels=New%20Song%20Request&body=${encodeURIComponent(body)}`;
-  
+
   window.open(issueUrl, '_blank');
 });

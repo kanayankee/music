@@ -20,7 +20,9 @@ export class LitFooter extends LitElement {
       color: var(--color-text-secondary);
       width: 100%;
       box-sizing: border-box;
-      transition: width 0.3s ease, padding-right 0.3s ease;
+      transition:
+        width 0.3s ease,
+        padding-right 0.3s ease;
     }
 
     .lit-footer.mv-active {
@@ -62,12 +64,24 @@ export class LitFooter extends LitElement {
       transform: translateY(-5px);
     }
 
-    .colorful:nth-child(6n+1) { color: var(--color-red); }
-    .colorful:nth-child(6n+2) { color: var(--color-yellow); }
-    .colorful:nth-child(6n+3) { color: var(--color-green); }
-    .colorful:nth-child(6n+4) { color: var(--color-blue); }
-    .colorful:nth-child(6n+5) { color: var(--color-orange); }
-    .colorful:nth-child(6n+0) { color: var(--color-purple); }
+    .colorful:nth-child(6n + 1) {
+      color: var(--color-red);
+    }
+    .colorful:nth-child(6n + 2) {
+      color: var(--color-yellow);
+    }
+    .colorful:nth-child(6n + 3) {
+      color: var(--color-green);
+    }
+    .colorful:nth-child(6n + 4) {
+      color: var(--color-blue);
+    }
+    .colorful:nth-child(6n + 5) {
+      color: var(--color-orange);
+    }
+    .colorful:nth-child(6n + 0) {
+      color: var(--color-purple);
+    }
 
     .icon-gh {
       height: 1.2em;
@@ -91,21 +105,32 @@ export class LitFooter extends LitElement {
       <footer class="lit-footer ${this.isMVMode ? 'mv-active' : ''}">
         <div class="lit-footer__inner">
           <p id="thanks">
-            ${Array.from("Thanks for visiting!").map(char => html`
-              <span class="colorful" style="${char === ' ' ? 'margin-right:0.5em;' : ''}">${char}</span>
-            `)}
+            ${Array.from('Thanks for visiting!').map(
+              (char) => html`
+                <span class="colorful" style="${char === ' ' ? 'margin-right:0.5em;' : ''}"
+                  >${char}</span
+                >
+              `
+            )}
           </p>
           <p>
-            Do you have any information?<br>
-            Please tell us on <a href="https://www.facebook.com/LiTmusic-182225395894104" target="_blank" rel="noopener">Facebook</a>,<br>
-            or<br>
-            You can check it on <a href="https://github.com/lit-kansai-members/music" target="_blank" rel="noopener">
-              <img src="${base}res/img/github-mark.svg" alt="GitHub" class="icon-gh"> GitHub
-            </a>.<br>
-            <br>
-            <a href="${base}post/">曲の掲載をリクエストする</a><br>
-            <span style="color: var(--color-gray)">(Githubアカウントが必要です)</span><br>
-            <br>
+            Do you have any information?<br />
+            Please tell us on
+            <a
+              href="https://www.facebook.com/LiTmusic-182225395894104"
+              target="_blank"
+              rel="noopener"
+              >Facebook</a
+            >,<br />
+            or<br />
+            You can check it on
+            <a href="https://github.com/lit-kansai-members/music" target="_blank" rel="noopener">
+              <img src="${base}res/img/github-mark.svg" alt="GitHub" class="icon-gh" /> GitHub </a
+            >.<br />
+            <br />
+            <a href="${base}post/">曲の掲載をリクエストする</a><br />
+            <span style="color: var(--color-gray)">(Githubアカウントが必要です)</span><br />
+            <br />
             <small>This project is unofficial.</small>
           </p>
           <p class="copyright">&copy; Life is Tech ! Kansai Members</p>

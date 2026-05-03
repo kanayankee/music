@@ -35,7 +35,10 @@ export class LitHeader extends LitElement {
       right: 0;
       z-index: 100;
       height: calc((1 - var(--intro-progress, 0)) * 100vh + var(--intro-progress, 0) * 128px);
-      transition: box-shadow var(--transition-fast), width 0.3s ease, padding-right 0.3s ease;
+      transition:
+        box-shadow var(--transition-fast),
+        width 0.3s ease,
+        padding-right 0.3s ease;
       overflow: hidden;
     }
 
@@ -73,7 +76,9 @@ export class LitHeader extends LitElement {
       max-width: 90vw;
       transform: scale(calc(1 - (var(--intro-progress, 0) * 0.28)));
       transform-origin: center;
-      margin-bottom: calc((1 - var(--intro-progress, 0)) * 1.5rem + var(--intro-progress, 0) * 0.35rem);
+      margin-bottom: calc(
+        (1 - var(--intro-progress, 0)) * 1.5rem + var(--intro-progress, 0) * 0.35rem
+      );
     }
 
     .lit-header__logos img {
@@ -82,7 +87,9 @@ export class LitHeader extends LitElement {
 
     .lit-header__logos #logo,
     .lit-header__logos #music {
-      transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transition:
+        opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1),
+        transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
       opacity: 1;
       transform: translateX(0);
     }
@@ -115,7 +122,9 @@ export class LitHeader extends LitElement {
       font-weight: 500;
       letter-spacing: 0.03em;
       line-height: 1;
-      transition: opacity var(--transition-fast), transform var(--transition-fast);
+      transition:
+        opacity var(--transition-fast),
+        transform var(--transition-fast);
       opacity: 0.62;
     }
 
@@ -191,36 +200,51 @@ export class LitHeader extends LitElement {
     const isScrollDownVisible = this.isAtPageTop;
 
     return html`
-      <header class="lit-header ${this.isMVMode ? 'mv-active' : ''}" style="--intro-progress: ${this.introProgress};">
+      <header
+        class="lit-header ${this.isMVMode ? 'mv-active' : ''}"
+        style="--intro-progress: ${this.introProgress};"
+      >
         <div class="lit-header__inner">
           <div class="lit-header__logos ${this.splashActive ? 'splash-active' : ''}">
-            <img src="${base}res/img/mark.svg" alt="Mark" id="mark">
-            <img src="${base}res/img/logo.svg" alt="Life is Tech!" id="logo">
-            <img src="${base}res/img/music.svg" alt="music" id="music">
+            <img src="${base}res/img/mark.svg" alt="Mark" id="mark" />
+            <img src="${base}res/img/logo.svg" alt="Life is Tech!" id="logo" />
+            <img src="${base}res/img/music.svg" alt="music" id="music" />
           </div>
 
           <div class="lit-tabs">
-            <button 
-              class="lit-tabs__button ${this.activeTab === 'camp' ? 'lit-tabs__button--active' : ''}"
+            <button
+              class="lit-tabs__button ${this.activeTab === 'camp'
+                ? 'lit-tabs__button--active'
+                : ''}"
               @click=${() => this.dispatchEvent(new CustomEvent('tab-changed', { detail: 'camp' }))}
             >
               Camp
             </button>
-            <button 
-              class="lit-tabs__button ${this.activeTab === 'school' ? 'lit-tabs__button--active' : ''}"
-              @click=${() => this.dispatchEvent(new CustomEvent('tab-changed', { detail: 'school' }))}
+            <button
+              class="lit-tabs__button ${this.activeTab === 'school'
+                ? 'lit-tabs__button--active'
+                : ''}"
+              @click=${() =>
+                this.dispatchEvent(new CustomEvent('tab-changed', { detail: 'school' }))}
             >
               School
             </button>
-            <button 
-              class="lit-tabs__button ${this.activeTab === 'event' ? 'lit-tabs__button--active' : ''}"
-              @click=${() => this.dispatchEvent(new CustomEvent('tab-changed', { detail: 'event' }))}
+            <button
+              class="lit-tabs__button ${this.activeTab === 'event'
+                ? 'lit-tabs__button--active'
+                : ''}"
+              @click=${() =>
+                this.dispatchEvent(new CustomEvent('tab-changed', { detail: 'event' }))}
             >
               Event
             </button>
           </div>
 
-          <button class="lit-scroll-down ${isScrollDownVisible ? '' : 'lit-scroll-down--hidden'}" @click=${() => this.dispatchEvent(new CustomEvent('scroll-click'))} aria-label="Scroll down">
+          <button
+            class="lit-scroll-down ${isScrollDownVisible ? '' : 'lit-scroll-down--hidden'}"
+            @click=${() => this.dispatchEvent(new CustomEvent('scroll-click'))}
+            aria-label="Scroll down"
+          >
             <span>School Down</span>
             <span class="lit-scroll-down__chevron" aria-hidden="true">
               <span class="lit-scroll-down__chevron-line"></span>

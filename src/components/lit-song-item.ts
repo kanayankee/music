@@ -99,7 +99,7 @@ export class LitSongItem extends LitElement {
       display: inline-flex;
       align-items: center;
     }
-    
+
     .lit-btn-action--spotify:hover {
       color: #1fdf64;
     }
@@ -156,13 +156,14 @@ export class LitSongItem extends LitElement {
     }
   `;
 
-
   private handlePlay() {
-    this.dispatchEvent(new CustomEvent('play-song', {
-      detail: { song: this.song },
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('play-song', {
+        detail: { song: this.song },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   private handleLinkClick(e: MouseEvent) {
@@ -173,11 +174,13 @@ export class LitSongItem extends LitElement {
       const href = anchor.getAttribute('href');
       if (href && href.toLowerCase().endsWith('.md')) {
         e.preventDefault();
-        this.dispatchEvent(new CustomEvent('open-markdown', {
-          detail: { url: href },
-          bubbles: true,
-          composed: true
-        }));
+        this.dispatchEvent(
+          new CustomEvent('open-markdown', {
+            detail: { url: href },
+            bubbles: true,
+            composed: true,
+          })
+        );
       }
     }
   }
@@ -196,7 +199,7 @@ export class LitSongItem extends LitElement {
     if (this.isPlaying) {
       this.reportPlaceholderPosition();
     }
-  }
+  };
 
   updated(changedProperties: Map<string, any>) {
     if (changedProperties.has('isPlaying')) {
@@ -212,82 +215,140 @@ export class LitSongItem extends LitElement {
     if (ph) {
       const rect = ph.getBoundingClientRect();
       const top = rect.top + window.scrollY; // Absolute document position
-      this.dispatchEvent(new CustomEvent('video-position-changed', {
-        detail: { top },
-        bubbles: true,
-        composed: true
-      }));
+      this.dispatchEvent(
+        new CustomEvent('video-position-changed', {
+          detail: { top },
+          bubbles: true,
+          composed: true,
+        })
+      );
     }
   }
 
   render() {
     const description = this.song.description || '';
-    const ytMatch = this.song.youtubeUrl?.match(/(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+    const ytMatch = this.song.youtubeUrl?.match(
+      /(?:\/\/|https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/
+    );
     const youtubeId = ytMatch ? ytMatch[1] : null;
     const showInlinePlayer = this.isMobile && this.isPlaying && youtubeId;
-    const embedUrl = youtubeId ? `https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0&modestbranding=1` : '';
+    const embedUrl = youtubeId
+      ? `https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0&modestbranding=1`
+      : '';
 
     return html`
-      <div class="lit-song ${youtubeId ? 'lit-song--playable' : ''}" @click=${youtubeId ? this.handlePlay : null}>
+      <div
+        class="lit-song ${youtubeId ? 'lit-song--playable' : ''}"
+        @click=${youtubeId ? this.handlePlay : null}
+      >
         <div class="lit-song__header">
           <div class="lit-song__title-wrap">
-            ${this.isMobile ? html`
-              <div class="lit-song__title-row">
-                <h4 class="lit-song__title">${this.song.title}</h4>
-                ${this.song.spotify ? html`
-                  <a href="${this.song.spotify}" target="_blank" rel="noopener noreferrer" class="lit-btn-action lit-btn-action--spotify" title="Play on Spotify" @click=${(e: Event) => e.stopPropagation()}>
-                    ${spotifyIcon}
-                  </a>
-                ` : ''}
-              </div>
-            ` : html`
-              <h4 class="lit-song__title">${this.song.title}</h4>
-              ${this.song.spotify ? html`
-                <a href="${this.song.spotify}" target="_blank" rel="noopener noreferrer" class="lit-btn-action lit-btn-action--spotify" title="Play on Spotify" @click=${(e: Event) => e.stopPropagation()}>
-                  ${spotifyIcon}
-                </a>
-              ` : ''}
-            `}
+            ${this.isMobile
+              ? html`
+                  <div class="lit-song__title-row">
+                    <h4 class="lit-song__title">${this.song.title}</h4>
+                    ${this.song.spotify
+                      ? html`
+                          <a
+                            href="${this.song.spotify}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="lit-btn-action lit-btn-action--spotify"
+                            title="Play on Spotify"
+                            @click=${(e: Event) => e.stopPropagation()}
+                          >
+                            ${spotifyIcon}
+                          </a>
+                        `
+                      : ''}
+                  </div>
+                `
+              : html`
+                  <h4 class="lit-song__title">${this.song.title}</h4>
+                  ${this.song.spotify
+                    ? html`
+                        <a
+                          href="${this.song.spotify}"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="lit-btn-action lit-btn-action--spotify"
+                          title="Play on Spotify"
+                          @click=${(e: Event) => e.stopPropagation()}
+                        >
+                          ${spotifyIcon}
+                        </a>
+                      `
+                    : ''}
+                `}
             <span class="lit-song__author">${this.song.author}</span>
           </div>
           <div class="lit-song__actions">
-            ${youtubeId ? html`
-              <div class="lit-btn-action lit-btn-action--play" title="Play on YouTube">
-                ${playIcon}
-              </div>
-            ` : ''}
+            ${youtubeId
+              ? html`
+                  <div class="lit-btn-action lit-btn-action--play" title="Play on YouTube">
+                    ${playIcon}
+                  </div>
+                `
+              : ''}
           </div>
         </div>
         <div class="lit-song__desc" @click=${this.handleLinkClick}>
-          ${description ? html`<div .innerHTML=${marked.parse(description, { breaks: true })}></div>` : ''}
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; font-size: 0.8rem; color: var(--color-text-secondary);">
-              <div>
-                🎤 
-                [DAM] ${this.song.damNumber ? (this.song.damUrl ? html`<a href="${this.song.damUrl}" target="_blank" rel="noopener">${this.song.damNumber}</a>` : this.song.damNumber) : '404 NotFound'}
-                [JOYSOUND] ${this.song.joyNumber ? (this.song.joyUrl ? html`<a href="${this.song.joyUrl}" target="_blank" rel="noopener">${this.song.joyNumber}</a>` : this.song.joyNumber) : '404 NotFound'}
-              </div>
-            ${this.song.lyricsUrl ? html`
-              <div>
-                [歌詞] <a href="${this.song.lyricsUrl}" target="_blank" rel="noopener">${this.song.lyricsSiteName || '歌詞サイト'}</a>
-              </div>
-            ` : ''}
-            ${this.song.youtubeUrl && !youtubeId ? html`
-              <div>
-                [動画] <a href="${this.song.youtubeUrl}" target="_blank" rel="noopener">YouTube</a>
-              </div>
-            ` : ''}
+          ${description
+            ? html`<div .innerHTML=${marked.parse(description, { breaks: true })}></div>`
+            : ''}
+          <div
+            style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; font-size: 0.8rem; color: var(--color-text-secondary);"
+          >
+            <div>
+              🎤 [DAM]
+              ${this.song.damNumber
+                ? this.song.damUrl
+                  ? html`<a href="${this.song.damUrl}" target="_blank" rel="noopener"
+                      >${this.song.damNumber}</a
+                    >`
+                  : this.song.damNumber
+                : '404 NotFound'}
+              [JOYSOUND]
+              ${this.song.joyNumber
+                ? this.song.joyUrl
+                  ? html`<a href="${this.song.joyUrl}" target="_blank" rel="noopener"
+                      >${this.song.joyNumber}</a
+                    >`
+                  : this.song.joyNumber
+                : '404 NotFound'}
+            </div>
+            ${this.song.lyricsUrl
+              ? html`
+                  <div>
+                    [歌詞]
+                    <a href="${this.song.lyricsUrl}" target="_blank" rel="noopener"
+                      >${this.song.lyricsSiteName || '歌詞サイト'}</a
+                    >
+                  </div>
+                `
+              : ''}
+            ${this.song.youtubeUrl && !youtubeId
+              ? html`
+                  <div>
+                    [動画]
+                    <a href="${this.song.youtubeUrl}" target="_blank" rel="noopener">YouTube</a>
+                  </div>
+                `
+              : ''}
           </div>
         </div>
-        ${showInlinePlayer ? html`
-          <div class="lit-song__embed">
-            <iframe
-              src="${embedUrl}"
-              title="${this.song.title}"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-            ></iframe>
-          </div>
-        ` : ''}
+        ${showInlinePlayer
+          ? html`
+              <div class="lit-song__embed">
+                <iframe
+                  src="${embedUrl}"
+                  title="${this.song.title}"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            `
+          : ''}
       </div>
     `;
   }
