@@ -2408,7 +2408,8 @@
         ]
       },
       {
-        "name": "関西卒業サプライズ2024 〜Life is Tech ! 20XX〜",
+        "name": "関西卒業サプライズ2024",
+        "theme": "〜Life is Tech ! 20XX〜",
         "background": "../../res/img/backgrounds/event_2024_surprise_kansai.webp",
         "songs": [
           {
